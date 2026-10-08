@@ -195,6 +195,7 @@ body{background:linear-gradient(180deg,#f8f7fa 0,#f4f3f7 100%);color:var(--text)
 <button class="navbtn" data-page="loans" onclick="showPage('loans')">🏦 <span class="navtext">Loans</span></button>
 <button class="navbtn" data-page="calculators" onclick="showPage('calculators')">🧮 <span class="navtext">Calculators</span></button>
 <button class="navbtn" data-page="repayments" onclick="showPage('repayments')">💵 <span class="navtext">Repayments</span></button>
+<button class="navbtn" data-page="ledger" onclick="showPage('ledger')">📒 <span class="navtext">Ledger</span></button>
 <div class="navgroup">Tools</div>
 <button class="navbtn" data-page="reports" onclick="showPage('reports')">📑 <span class="navtext">Reports</span></button>
 <button class="navbtn admin-only" data-page="settings" onclick="showPage('settings')">⚙️ <span class="navtext">Settings</span></button>
@@ -262,6 +263,19 @@ body{background:linear-gradient(180deg,#f8f7fa 0,#f4f3f7 100%);color:var(--text)
 </div>
 </section>
 <section id="repaymentsPage" class="hidden"><div class="toprow"><div><h1>Repayments</h1><div class="muted">Principal और Interest दोनों की अलग payment entry</div></div><button class="btn primary admin-only" onclick="openRepaymentModal()">+ Add Repayment</button></div><div class="card"><div class="toolbar"><input id="repaySearch" class="search" placeholder="Search member..." oninput="renderRepayments()"><button class="btn soft small" onclick="exportRepayments()">Export CSV</button></div><div class="tablewrap"><table class="table"><thead><tr><th>Member</th><th>Type</th><th>Principal</th><th>Interest</th><th>Total</th><th>Paid On</th><th>Note</th><th>Action</th></tr></thead><tbody id="repayRows"></tbody></table></div></div></section>
+<section id="ledgerPage" class="hidden">
+<div class="toprow"><div><h1>📒 Group Ledger</h1><div class="muted">Contribution, Fine, Loan Disbursement और Repayment — सभी transactions एक ही जगह</div></div><button class="btn soft" onclick="renderLedger()">↻ Refresh</button></div>
+<div class="card"><div class="toolbar">
+<div class="field" style="min-width:150px;flex:1"><label>From</label><input id="ledgerFrom" type="date"></div>
+<div class="field" style="min-width:150px;flex:1"><label>To</label><input id="ledgerTo" type="date"></div>
+<div class="field" style="min-width:180px;flex:1"><label>Member</label><select id="ledgerMember"><option value="">All Members</option></select></div>
+<div class="field" style="min-width:170px;flex:1"><label>Transaction Type</label><select id="ledgerType"><option value="">All Transactions</option><option value="Contribution">Contribution</option><option value="Fine">Fine</option><option value="Loan Disbursed">Loan Disbursed</option><option value="Repayment">Repayment</option></select></div>
+<div class="field" style="min-width:190px;flex:1"><label>Search</label><input id="ledgerSearch" placeholder="Member / note / details..."></div>
+<div class="formactions" style="margin-top:0;align-self:end"><button class="btn primary" onclick="renderLedger()">GO</button><button class="btn soft" onclick="clearLedgerFilters()">Clear</button><button class="btn soft" onclick="exportLedger()">Export CSV</button></div>
+</div></div>
+<div id="ledgerSummary" class="stats" style="margin-top:16px"></div>
+<div class="card" style="margin-top:16px"><div class="muted">Ledger में loan को <b>Outgoing</b> और contribution/fine/repayment को <b>Incoming</b> माना गया है. Repayment में principal + interest का पूरा breakup दिखेगा.</div><div class="tablewrap"><table class="table"><thead><tr><th>Date</th><th>Member</th><th>Type</th><th>Details</th><th>Incoming</th><th>Outgoing</th><th>Running Balance</th></tr></thead><tbody id="ledgerRows"></tbody></table></div></div>
+</section>
 <section id="reportsPage" class="hidden">
 <div class="toprow"><div><h1>Reports</h1><div class="muted">Complete financial reports, member statements और month-wise transaction tracking</div></div><div class="toolbar"><button class="btn soft small" onclick="printReports()">🖨️ Print Report</button><button class="btn primary small" onclick="exportFullReport()">📥 Export Full CSV</button></div></div>
 <div class="card">
@@ -466,7 +480,7 @@ window.useSavedConnection=async function(){
 };
 
 function showPage(page){
-  const pages=["dashboard","members","contributions","loans","calculators","repayments","reports","settings"];
+  const pages=["dashboard","members","contributions","loans","calculators","repayments","ledger","reports","settings"];
   if(!pages.includes(page)) page="dashboard";
   if(page==="settings" && !isAdmin){ page="dashboard"; }
   pages.forEach(name=>{
@@ -482,6 +496,7 @@ function showPage(page){
   if(page==="loans") renderLoans();
   if(page==="calculators"){calcLoan();calcEMI();}
   if(page==="repayments") renderRepayments();
+  if(page==="ledger") renderLedger();
   if(page==="reports") renderReports();
 }
 window.showPage=showPage;
@@ -489,7 +504,7 @@ window.showPage=showPage;
 async function openApp(user){$("authView").classList.add("hidden");$("appView").classList.remove("hidden");$("who").textContent=isAdmin?(user?.email||"ranav2r@gmail.com"):(memberName(currentMemberId)||"Member");applyRoleUI();showPage("dashboard");applyRoleUI();await refresh()}
 function openAdminLogin(){$("appView").classList.add("hidden");$("authView").classList.remove("hidden");$("setupBox").classList.add("hidden");$("loginBox").classList.remove("hidden");setLoginMode("admin");$("loginMsg").textContent="Sirf ranav2r@gmail.com Admin login kar sakte hain."}
 async function refresh(){
-  if(memberLocalSession){renderDashboard();renderMembers();renderContributions();renderLoans();renderRepayments();renderReports();return;}
+  if(memberLocalSession){renderDashboard();renderMembers();renderContributions();renderLoans();renderRepayments();renderLedger();renderReports();return;}
   if(!sb)return;
   try{
     let queries;
@@ -501,7 +516,7 @@ async function refresh(){
     const results=await Promise.race([Promise.all(queries),new Promise((_,reject)=>setTimeout(()=>reject(new Error("Data load timed out. Supabase/RLS check karein.")),10000))]);
     const errs=results.filter(x=>x?.error);if(errs.length)throw errs[0].error;
     const [m,c,l,r,gs]=results;cache={members:m.data||[],contributions:c.data||[],loans:l.data||[],repayments:r.data||[]};groupSummary=isAdmin?null:(gs?.data||null);
-    renderDashboard();renderMembers();renderContributions();renderLoans();renderRepayments();renderReports();
+    renderDashboard();renderMembers();renderContributions();renderLoans();renderRepayments();renderLedger();renderReports();
   }catch(e){const msg=e?.message||"Data load failed";console.error(e);const target=$("loginMsg");if(target)target.innerHTML='<span class="error">Data load failed: '+esc(msg)+' </span>';const app=$("appView");if(app&&!app.classList.contains("hidden")){const note=$("appLoadError")||document.createElement("div");note.id="appLoadError";note.className="notice";note.style="margin:16px;color:#7f1d1d;background:#fff1f2;border-color:#fecdd3";note.innerHTML='<b>Data load problem:</b> '+esc(msg)+' <button class="btn soft small" onclick="refresh()">Retry</button>';app.querySelector(".content")?.prepend(note)}}
 }
 function renderWowDashboard(active,con,fine,interestPaid,interestDue,out,current,closed,totalLoanDistributed,currentLoanAmount,collected){
@@ -640,7 +655,7 @@ function openContributionModal(editId,preselectedId){if(!requireAdmin())return;
   const x=editId?cache.contributions.find(c=>c.id===editId):null;
   const selected=x?[x.member_id]:(preselectedId?[preselectedId]:[]);
   const existing=x?{[x.member_id]:Number(x.fine||0)}:{};
-  openModal(`<div class="modalhead"><div><h2 style="margin:0">${x?'Edit Contribution':'Current Contribution'}</h2><div class="muted">${x?'Is member ki previous entry change karein':'Har selected member ki Fine alag se set hogi — kisi par fine ho sakta hai, kisi par nahi.'}</div></div><button class="close" onclick="closeModal()">×</button></div><div class="notice" style="margin-top:16px">Fine sab members par automatically same nahi lagega. Neeche har member ke saamne <b>Yes / No</b> aur fine amount alag set karein.</div><div class="field"><label>Member</label>${x?`<div class="memberpick"><b>${esc(memberName(x.member_id))}</b><span class="muted">(current profile)</span></div>`:memberPickerHtml()}</div><div class="field" style="margin-top:12px"><label>Selected Members — Individual Fine</label><div id="memberFineRows"></div></div><div class="formgrid"><div class="field"><label>Month</label><input id="cMonth" type="month" value="${esc(x?.month||monthNow())}"></div><div class="field"><label>Contribution Amount</label><input id="cAmount" type="number" min="0" value="${Number(x?.amount??5)}"></div><div class="field"><label>Paid On</label><input id="cPaid" type="date" value="${esc(x?.paid_on||today())}"></div></div><div class="formactions"><button class="btn primary" onclick="saveContribution('${editId||''}')">${x?'Update Contribution':'Save Contribution'}</button>${x?`<button class="btn danger" onclick="deleteContribution('${x.id}')">🗑 Completely Delete</button>`:''}<button class="btn soft" onclick="closeModal()">Cancel</button></div>`);
+  openModal(`<div class="modalhead"><div><h2 style="margin:0">${x?'Edit Contribution':'Current Contribution'}</h2><div class="muted">${x?'Is member ki previous entry change karein':'Har selected member ki Fine alag se set hogi — kisi par fine ho sakta hai, kisi par nahi.'}</div></div><button class="close" onclick="closeModal()">×</button></div><div class="notice" style="margin-top:16px">Fine sab members par automatically same nahi lagega. Neeche har member ke saamne <b>Yes / No</b> aur fine amount alag set karein.</div><div class="field"><label>Member</label>${x?`<div class="memberpick"><b>${esc(memberName(x.member_id))}</b><span class="muted">(current profile)</span></div>`:memberPickerHtml()}</div><div class="field" style="margin-top:12px"><label>Selected Members — Individual Fine</label><div id="memberFineRows"></div></div><div class="formgrid"><div class="field"><label>Month</label><input id="cMonth" type="month" value="${esc(x?.month||monthNow())}"></div><div class="field"><label>Contribution Amount <span class="muted">(Default from Settings)</span></label><input id="cAmount" type="number" min="0" value="${Number(x?.amount??getSettings().contribution??0)}"></div><div class="field"><label>Paid On</label><input id="cPaid" type="date" value="${esc(x?.paid_on||today())}"></div></div><div class="formactions"><button class="btn primary" onclick="saveContribution('${editId||''}')">${x?'Update Contribution':'Save Contribution'}</button>${x?`<button class="btn danger" onclick="deleteContribution('${x.id}')">🗑 Completely Delete</button>`:''}<button class="btn soft" onclick="closeModal()">Cancel</button></div>`);
   renderMemberFineRows(selected,existing);
 }
 window.openContributionModal=openContributionModal;
@@ -795,6 +810,45 @@ function generateReport(){showReportOutput();renderReports(true)}
 function reportMatch(text){const q=reportFilters().search;return !q||String(text||'').toLowerCase().includes(q)}
 function setReportSections(type){const ids={monthly:'monthlyTransactionRows',member:'memberReportRows',statement:'memberStatementRows',loan:'loanSummary',contribution:'contribSummary',balance:'balanceRows'};Object.values(ids).forEach(id=>{const el=$(id);if(!el)return;const card=el.closest('.card');if(card)card.style.display=(type==='all'||Object.keys(ids).find(k=>ids[k]===id)===type)?'':'none'});const ms=$('memberStatementRows');if(ms&&type==='statement'&&!reportFilters().member)ms.closest('.card').style.display='';}
 
+function ledgerData(){
+  const from=$('ledgerFrom')?.value||'', to=$('ledgerTo')?.value||'', member=$('ledgerMember')?.value||'', type=$('ledgerType')?.value||'', q=($('ledgerSearch')?.value||'').trim().toLowerCase();
+  const rows=[];
+  const push=(date,mid,t,details,incoming,outgoing,note='')=>{
+    const d=String(date||'').slice(0,10); if(!d)return;
+    if(from&&d<from)return; if(to&&d>to)return; if(member&&mid!==member)return; if(type&&t!==type)return;
+    const hay=[memberName(mid),t,details,note].join(' ').toLowerCase(); if(q&&!hay.includes(q))return;
+    rows.push({date:d,memberId:mid,type:t,details,incoming:Number(incoming||0),outgoing:Number(outgoing||0)});
+  };
+  cache.contributions.forEach(x=>{
+    const d=x.paid_on||`${x.month}-01`;
+    push(d,x.member_id,'Contribution',`Monthly contribution · ${x.month}`,Number(x.amount||0),0);
+    if(Number(x.fine||0)>0)push(d,x.member_id,'Fine',`Fine · ${x.month}`,Number(x.fine||0),0);
+  });
+  cache.loans.forEach(x=>{
+    if(isMerged(x))return;
+    push(x.loan_date,x.member_id,'Loan Disbursed',`${String(x.notes||'').startsWith('TOP-UP')?'Top-up':'Loan'} · Principal ${money(x.amount)}`,0,Number(x.amount||0),x.notes||'');
+  });
+  cache.repayments.forEach(r=>{
+    const l=cache.loans.find(x=>x.id===r.loan_id); if(!l)return;
+    const p=Number(r.principal_amount??(String(r.payment_type||'').toLowerCase()==='principal'?r.amount:0));
+    const i=Number(r.interest_amount??(String(r.payment_type||'').toLowerCase()==='interest'?r.amount:0));
+    push(r.paid_on,l.member_id,'Repayment',`${repaymentTypeLabel(r)} · Principal ${money(p)} · Interest ${money(i)}${r.note?' · '+r.note:''}`,Number(r.amount||0),0,r.note||'');
+  });
+  rows.sort((a,b)=>a.date.localeCompare(b.date)||a.type.localeCompare(b.type)||memberName(a.memberId).localeCompare(memberName(b.memberId)));
+  return rows;
+}
+function populateLedgerMembers(){const el=$('ledgerMember');if(!el)return;const current=el.value||'';el.innerHTML='<option value="">All Members</option>'+cache.members.slice().sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''))).map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('');if(current&&cache.members.some(m=>m.id===current))el.value=current;}
+function renderLedger(){
+  if(!$('ledgerRows'))return;
+  populateLedgerMembers();
+  const rows=ledgerData(); let bal=0,incoming=0,outgoing=0;
+  $('ledgerRows').innerHTML=rows.map(x=>{incoming+=x.incoming;outgoing+=x.outgoing;bal+=x.incoming-x.outgoing;return `<tr><td>${x.date}</td><td><b>${esc(memberName(x.memberId))}</b></td><td><span class="badge ${x.type==='Loan Disbursed'?'red':x.type==='Fine'?'amber':'green'}">${esc(x.type)}</span></td><td>${esc(x.details)}</td><td>${x.incoming?money(x.incoming):'—'}</td><td>${x.outgoing?money(x.outgoing):'—'}</td><td><b>${money(bal)}</b></td></tr>`}).join('')||'<tr><td colspan="7" class="empty">Selected filters में कोई transaction नहीं मिला.</td></tr>';
+  const net=incoming-outgoing;
+  $('ledgerSummary').innerHTML=`<div class="card statcard"><div class="statlabel">TRANSACTIONS</div><div class="statvalue">${rows.length}</div><div class="statmeta">Selected period / filters</div></div><div class="card statcard"><div class="statlabel">TOTAL INCOMING</div><div class="statvalue">${money(incoming)}</div><div class="statmeta">Contribution + Fine + Repayment</div></div><div class="card statcard"><div class="statlabel">TOTAL OUTGOING</div><div class="statvalue">${money(outgoing)}</div><div class="statmeta">Loan disbursement</div></div><div class="card statcard"><div class="statlabel">NET CASH FLOW</div><div class="statvalue">${money(net)}</div><div class="statmeta">Incoming − Outgoing</div></div>`;
+}
+function clearLedgerFilters(){if($('ledgerFrom'))$('ledgerFrom').value='';if($('ledgerTo'))$('ledgerTo').value='';if($('ledgerMember'))$('ledgerMember').value='';if($('ledgerType'))$('ledgerType').value='';if($('ledgerSearch'))$('ledgerSearch').value='';renderLedger();}
+function exportLedger(){const rows=ledgerData();let bal=0;csv([['Date','Member','Type','Details','Incoming','Outgoing','Running Balance'],...rows.map(x=>{bal+=x.incoming-x.outgoing;return[x.date,memberName(x.memberId),x.type,x.details,x.incoming,x.outgoing,bal]})]);}
+window.renderLedger=renderLedger;window.clearLedgerFilters=clearLedgerFilters;window.exportLedger=exportLedger;
 function reportRowsData(){const f=reportFilters();const cs=cache.contributions.filter(x=>(!f.member||x.member_id===f.member)&&dateInRange(x.paid_on||x.month,f.from,f.to));const ls=cache.loans.filter(x=>(!f.member||x.member_id===f.member)&&dateInRange(x.loan_date,f.from,f.to));const rs=cache.repayments.filter(x=>{const loan=cache.loans.find(l=>l.id===x.loan_id);return loan&&(!f.member||loan.member_id===f.member)&&dateInRange(x.paid_on,f.from,f.to)});return {f,cs,ls,rs}}
 function renderReportMemberOptions(){const sel=$('reportMember');if(!sel)return;const cur=sel.value;sel.innerHTML='<option value="">All Members</option>'+cache.members.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('');sel.value=cache.members.some(m=>m.id===cur)?cur:''}
 function monthlyTransactionData(){const {f}=reportRowsData();const map={};const add=(date,field,val)=>{const m=String(date||'').slice(0,7);if(!m)return;if((f.from&&m+'-31'<f.from.slice(0,7)+'-01')||(f.to&&m>f.to.slice(0,7)))return;if(!map[m])map[m]={month:m,con:0,fine:0,interest:0,incoming:0,loan:0,outgoing:0};map[m][field]+=Number(val||0)};
@@ -854,4 +908,4 @@ init();
   });
 })();
 </script>
-</body></html>
+<div id="sfgVersion" style="display:none">V69</div></body></html>

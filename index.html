@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sharma Finance Group V194 — Merged Loan Ledger Fix</title>
+<title>Sharma Finance Group — Member Management</title>
 <style>
 :root{--nav:#24483f;--nav2:#35685b;--accent:#3b8c78;--bg:#f3f7f3;--card:#ffffff;--text:#20332d;--muted:#687a72;--line:#dce7df;--green:#24734f;--red:#bd4545;--amber:#9a680f;--shadow:0 10px 30px rgba(36,72,63,.08)}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}button,input,select{font:inherit}input,select,textarea{user-select:text!important;-webkit-user-select:text!important;pointer-events:auto!important}input:focus,select:focus,textarea:focus{outline:2px solid #3b8c78!important;outline-offset:1px}button{border:0;cursor:pointer}.hidden{display:none!important}
@@ -395,11 +395,13 @@ input,select,textarea,.search,.field input,.field select{background:#f9fcff!impo
 <style id="v176-dashboard-graphs">
 .sfg-analytics-row{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important}.sfg-graph-card{min-width:0;overflow:hidden;background:linear-gradient(145deg,#fff 0%,#f7fbff 100%)!important;border:1px solid #dce7f3!important;box-shadow:0 14px 35px rgba(20,45,75,.09)!important}.sfg-graph-card h3{font-weight:900;letter-spacing:-.2px}.sfg-graph-svg{display:block;width:100%;height:auto;min-height:190px;overflow:visible}.sfg-graph-legend{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}.sfg-graph-key{min-width:0;border-radius:12px;background:#f0f5fb;padding:10px}.sfg-graph-key small{display:block;color:#516477;font-size:11px;font-weight:700}.sfg-graph-key b{display:block;color:#142a43;font-size:14px;margin-top:3px;overflow-wrap:anywhere}.sfg-graph-foot{color:#61758a;font-size:11px;margin-top:10px;line-height:1.5}@media(max-width:760px){.sfg-analytics-row{grid-template-columns:minmax(0,1fr)!important}.sfg-graph-legend{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.sfg-graph-key{padding:8px 6px}.sfg-graph-key b{font-size:12px}.sfg-graph-key small{font-size:10px}}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTaGFybWEgRmluYW5jZSBHcm91cCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNmZ0ciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMxNzcwNUEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwQjNBMzAiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJzZmdCIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRjNEQzlBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQzk5NjJGIi8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjQiIGZpbGw9InVybCgjc2ZnRykiLz4KICA8cmVjdCB4PSIzIiB5PSIzIiB3aWR0aD0iOTAiIGhlaWdodD0iOTAiIHJ4PSIyMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3NmZ0IpIiBzdHJva2Utd2lkdGg9IjIuMiIvPgogIDxyZWN0IHg9IjkiIHk9IjkiIHdpZHRoPSI3OCIgaGVpZ2h0PSI3OCIgcng9IjE2IiBmaWxsPSJub25lIiBzdHJva2U9IiNFOEM3N0EiIHN0cm9rZS13aWR0aD0iLjkiIG9wYWNpdHk9Ii40NSIvPgogIDwhLS0gUyBhcyBhIGNvbnRpbnVvdXMgcmliYm9uIC0tPgogIDxwYXRoIGQ9Ik02MyAzMS41QzYzIDIzIDUyIDIwIDQ0IDIwLjVDMzUgMjEgMzAgMjYuNSAzMCAzM0MzMCA0MS41IDM4LjUgNDMuNSA0OCA0Ni41QzU3LjUgNDkuNSA2NiA1MiA2NiA2MUM2NiA2OSA1OSA3NCA0OSA3NEMzOSA3NCAzMiA3MCAzMiA2MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3NmZ0IpIiBzdHJva2Utd2lkdGg9IjguNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPCEtLSBsZWRnZXIgZG91YmxlIHJ1bGUgLS0+CiAgPHBhdGggZD0iTTI2IDgySDcwTTI2IDg1LjJINzAiIHN0cm9rZT0iI0U4Qzc3QSIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iLjg1Ii8+Cjwvc3ZnPgo="><link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTaGFybWEgRmluYW5jZSBHcm91cCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNmZ0ciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMxNzcwNUEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwQjNBMzAiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJzZmdCIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRjNEQzlBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQzk5NjJGIi8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjQiIGZpbGw9InVybCgjc2ZnRykiLz4KICA8cmVjdCB4PSIzIiB5PSIzIiB3aWR0aD0iOTAiIGhlaWdodD0iOTAiIHJ4PSIyMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3NmZ0IpIiBzdHJva2Utd2lkdGg9IjIuMiIvPgogIDxyZWN0IHg9IjkiIHk9IjkiIHdpZHRoPSI3OCIgaGVpZ2h0PSI3OCIgcng9IjE2IiBmaWxsPSJub25lIiBzdHJva2U9IiNFOEM3N0EiIHN0cm9rZS13aWR0aD0iLjkiIG9wYWNpdHk9Ii40NSIvPgogIDwhLS0gUyBhcyBhIGNvbnRpbnVvdXMgcmliYm9uIC0tPgogIDxwYXRoIGQ9Ik02MyAzMS41QzYzIDIzIDUyIDIwIDQ0IDIwLjVDMzUgMjEgMzAgMjYuNSAzMCAzM0MzMCA0MS41IDM4LjUgNDMuNSA0OCA0Ni41QzU3LjUgNDkuNSA2NiA1MiA2NiA2MUM2NiA2OSA1OSA3NCA0OSA3NEMzOSA3NCAzMiA3MCAzMiA2MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3NmZ0IpIiBzdHJva2Utd2lkdGg9IjguNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPCEtLSBsZWRnZXIgZG91YmxlIHJ1bGUgLS0+CiAgPHBhdGggZD0iTTI2IDgySDcwTTI2IDg1LjJINzAiIHN0cm9rZT0iI0U4Qzc3QSIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iLjg1Ii8+Cjwvc3ZnPgo="><meta name="theme-color" content="#0F4A3D">
 </head>
 <body>
-<div id="authView" class="loginwrap">
+<div id="authView" class="loginwrap"><aside class="sfg-login-hero"><div class="sfg-hero-mark"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTaGFybWEgRmluYW5jZSBHcm91cCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNmZ0ciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMxNzcwNUEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwQjNBMzAiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJzZmdCIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRjNEQzlBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQzk5NjJGIi8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjQiIGZpbGw9InVybCgjc2ZnRykiLz4KICA8cmVjdCB4PSIzIiB5PSIzIiB3aWR0aD0iOTAiIGhlaWdodD0iOTAiIHJ4PSIyMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3NmZ0IpIiBzdHJva2Utd2lkdGg9IjIuMiIvPgogIDxyZWN0IHg9IjkiIHk9IjkiIHdpZHRoPSI3OCIgaGVpZ2h0PSI3OCIgcng9IjE2IiBmaWxsPSJub25lIiBzdHJva2U9IiNFOEM3N0EiIHN0cm9rZS13aWR0aD0iLjkiIG9wYWNpdHk9Ii40NSIvPgogIDwhLS0gUyBhcyBhIGNvbnRpbnVvdXMgcmliYm9uIC0tPgogIDxwYXRoIGQ9Ik02MyAzMS41QzYzIDIzIDUyIDIwIDQ0IDIwLjVDMzUgMjEgMzAgMjYuNSAzMCAzM0MzMCA0MS41IDM4LjUgNDMuNSA0OCA0Ni41QzU3LjUgNDkuNSA2NiA1MiA2NiA2MUM2NiA2OSA1OSA3NCA0OSA3NEMzOSA3NCAzMiA3MCAzMiA2MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3NmZ0IpIiBzdHJva2Utd2lkdGg9IjguNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPCEtLSBsZWRnZXIgZG91YmxlIHJ1bGUgLS0+CiAgPHBhdGggZD0iTTI2IDgySDcwTTI2IDg1LjJINzAiIHN0cm9rZT0iI0U4Qzc3QSIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iLjg1Ii8+Cjwvc3ZnPgo=" alt="Sharma Finance Group logo" width="96" height="96"></div><div class="sfg-hero-copy"><h2>हर महीने की बचत,<br>हर क़र्ज़ का साफ़ हिसाब।</h2><p>Sharma Finance Group का सुरक्षित डिजिटल खाता: contribution, loan, EMI और ledger, सब एक ही जगह।</p></div><ul class="sfg-hero-points"><li>Contribution और fine का पूरा रिकॉर्ड</li><li>Loan, EMI और top-up का सटीक हिसाब</li><li>Admin बदलाव करे, members सिर्फ़ देखें</li></ul></aside>
   <div class="loginbox">
-    <div class="loginbrand"><div class="logo">SF</div><h1>Sharma Finance Group</h1><p>Secure Finance Management System</p></div>
+    <div class="loginbrand"><div class="logo"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTaGFybWEgRmluYW5jZSBHcm91cCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNmZ0ciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMxNzcwNUEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwQjNBMzAiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJzZmdCIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRjNEQzlBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQzk5NjJGIi8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjQiIGZpbGw9InVybCgjc2ZnRykiLz4KICA8cmVjdCB4PSIzIiB5PSIzIiB3aWR0aD0iOTAiIGhlaWdodD0iOTAiIHJ4PSIyMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3NmZ0IpIiBzdHJva2Utd2lkdGg9IjIuMiIvPgogIDxyZWN0IHg9IjkiIHk9IjkiIHdpZHRoPSI3OCIgaGVpZ2h0PSI3OCIgcng9IjE2IiBmaWxsPSJub25lIiBzdHJva2U9IiNFOEM3N0EiIHN0cm9rZS13aWR0aD0iLjkiIG9wYWNpdHk9Ii40NSIvPgogIDwhLS0gUyBhcyBhIGNvbnRpbnVvdXMgcmliYm9uIC0tPgogIDxwYXRoIGQ9Ik02MyAzMS41QzYzIDIzIDUyIDIwIDQ0IDIwLjVDMzUgMjEgMzAgMjYuNSAzMCAzM0MzMCA0MS41IDM4LjUgNDMuNSA0OCA0Ni41QzU3LjUgNDkuNSA2NiA1MiA2NiA2MUM2NiA2OSA1OSA3NCA0OSA3NEMzOSA3NCAzMiA3MCAzMiA2MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3NmZ0IpIiBzdHJva2Utd2lkdGg9IjguNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPCEtLSBsZWRnZXIgZG91YmxlIHJ1bGUgLS0+CiAgPHBhdGggZD0iTTI2IDgySDcwTTI2IDg1LjJINzAiIHN0cm9rZT0iI0U4Qzc3QSIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iLjg1Ii8+Cjwvc3ZnPgo=" alt="Sharma Finance Group logo" width="96" height="96"></div><h1>Sharma Finance Group</h1><p>Secure Finance Management System</p></div>
     <div id="setupBox">
       <div class="notice" style="background:#102a43;color:#dcecff;border-color:#3b8c78;margin-bottom:16px"><b>Supabase Connection</b><br><span style="font-size:11px">Production connection automatically configured hai. Zarurat par hi connection change karein.</span></div>
       <div class="field"><label>Supabase Project URL</label><input id="url" type="text" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" tabindex="1" placeholder="https://xxxxxxxx.supabase.co"></div>
@@ -431,32 +433,32 @@ input,select,textarea,.search,.field input,.field select{background:#f9fcff!impo
   </div>
 </div>
 <div id="appView" class="hidden">
-<header class="appbar"><div class="brand"><div class="logo">SF</div><div><b>Sharma Finance Group</b><small>Smart Finance · Member Management</small></div></div><div class="topbar-right"><div class="today-chip" title="Current date"><span class="today-icon">▦</span><span id="currentDateLabel">Loading date…</span></div><div class="user-menu-wrap" id="userMenuWrap"><button type="button" class="user-menu-trigger" id="userMenuTrigger" onclick="toggleUserMenu(event)" aria-haspopup="true" aria-expanded="false"><span class="president-avatar" id="presidentAvatar" title="Vikash Rana · Vice President/Admin photo" onclick="event.stopPropagation();document.getElementById('presidentPhotoInput').click()"><span id="presidentAvatarFallback">P</span><img id="presidentAvatarImage" alt="Vikash Rana Vice President/Admin photo" class="hidden"></span><input type="file" id="presidentPhotoInput" accept="image/*" class="hidden" onchange="savePresidentPhoto(event)"><span class="user-menu-labels"><b id="who">President / Admin</b><small id="userSubtitle">Group President</small></span><span class="role-pill" id="roleBadge" style="display:none"></span><span class="menu-chevron">⌄</span></button><div class="user-dropdown hidden" id="userDropdown"><div class="dropdown-heading"><span class="dropdown-crown">♛</span><div><b id="dropdownUserName">Group President</b><small id="dropdownRoleText">Administrator</small></div></div><button type="button" onclick="openPasswordChange()">🔑 <span>Change Password</span></button><button type="button" onclick="choosePresidentPhoto()">🖼️ <span>Update President Photo</span></button><div class="dropdown-divider"></div><button type="button" class="logout-option" onclick="logout()">↪ <span>Logout</span></button></div></div></div></header>
+<header class="appbar"><div class="brand"><div class="logo"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJTaGFybWEgRmluYW5jZSBHcm91cCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNmZ0ciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMxNzcwNUEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwQjNBMzAiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJzZmdCIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRjNEQzlBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQzk5NjJGIi8+PC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMjQiIGZpbGw9InVybCgjc2ZnRykiLz4KICA8cmVjdCB4PSIzIiB5PSIzIiB3aWR0aD0iOTAiIGhlaWdodD0iOTAiIHJ4PSIyMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3NmZ0IpIiBzdHJva2Utd2lkdGg9IjIuMiIvPgogIDxyZWN0IHg9IjkiIHk9IjkiIHdpZHRoPSI3OCIgaGVpZ2h0PSI3OCIgcng9IjE2IiBmaWxsPSJub25lIiBzdHJva2U9IiNFOEM3N0EiIHN0cm9rZS13aWR0aD0iLjkiIG9wYWNpdHk9Ii40NSIvPgogIDwhLS0gUyBhcyBhIGNvbnRpbnVvdXMgcmliYm9uIC0tPgogIDxwYXRoIGQ9Ik02MyAzMS41QzYzIDIzIDUyIDIwIDQ0IDIwLjVDMzUgMjEgMzAgMjYuNSAzMCAzM0MzMCA0MS41IDM4LjUgNDMuNSA0OCA0Ni41QzU3LjUgNDkuNSA2NiA1MiA2NiA2MUM2NiA2OSA1OSA3NCA0OSA3NEMzOSA3NCAzMiA3MCAzMiA2MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ1cmwoI3NmZ0IpIiBzdHJva2Utd2lkdGg9IjguNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPCEtLSBsZWRnZXIgZG91YmxlIHJ1bGUgLS0+CiAgPHBhdGggZD0iTTI2IDgySDcwTTI2IDg1LjJINzAiIHN0cm9rZT0iI0U4Qzc3QSIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iLjg1Ii8+Cjwvc3ZnPgo=" alt="Sharma Finance Group logo" width="96" height="96"></div><div><b>Sharma Finance Group</b><small>Smart Finance · Member Management</small></div></div><div class="topbar-right"><div class="today-chip" title="Current date"><span class="today-icon">▦</span><span id="currentDateLabel">Loading date…</span></div><div class="user-menu-wrap" id="userMenuWrap"><button type="button" class="user-menu-trigger" id="userMenuTrigger" onclick="toggleUserMenu(event)" aria-haspopup="true" aria-expanded="false"><span class="president-avatar" id="presidentAvatar" title="Vikash Rana · Vice President/Admin photo" onclick="event.stopPropagation();document.getElementById('presidentPhotoInput').click()"><span id="presidentAvatarFallback">P</span><img id="presidentAvatarImage" alt="Vikash Rana Vice President/Admin photo" class="hidden"></span><input type="file" id="presidentPhotoInput" accept="image/*" class="hidden" onchange="savePresidentPhoto(event)"><span class="user-menu-labels"><b id="who">President / Admin</b><small id="userSubtitle">Group President</small></span><span class="role-pill" id="roleBadge" style="display:none"></span><span class="menu-chevron">⌄</span></button><div class="user-dropdown hidden" id="userDropdown"><div class="dropdown-heading"><span class="dropdown-crown">♛</span><div><b id="dropdownUserName">Group President</b><small id="dropdownRoleText">Administrator</small></div></div><button type="button" onclick="openPasswordChange()">🔑 <span>Change Password</span></button><button type="button" onclick="choosePresidentPhoto()">🖼️ <span>Update President Photo</span></button><div class="dropdown-divider"></div><button type="button" class="logout-option" onclick="logout()">↪ <span>Logout</span></button></div></div></div></header>
 <div class="shell">
 <aside class="side">
 <div class="navgroup">Main</div>
-<button class="navbtn active" data-page="dashboard" onclick="showPage('dashboard')">📊 <span class="navtext">Dashboard</span></button>
-<button class="navbtn" data-page="members" onclick="showPage('members')">👥 <span class="navtext">Members</span></button>
+<button class="navbtn active" data-page="dashboard" onclick="showPage('dashboard')"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span class="navtext">Dashboard</span></button>
+<button class="navbtn" data-page="members" onclick="showPage('members')"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2.2.7 3.5 2.6 3.5 5.7"/></svg><span class="navtext">Members</span></button>
 <div class="navdropdown" id="contributionNavGroup">
-<button class="navbtn navdrop-trigger" type="button" aria-expanded="false" aria-controls="contributionSubmenu" onclick="showPage('contributionHub')">💰 <span class="navtext">Contributions</span><span class="dropchev">›</span></button>
+<button class="navbtn navdrop-trigger" type="button" aria-expanded="false" aria-controls="contributionSubmenu" onclick="showPage('contributionHub')"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H19v3"/><rect x="3" y="7.5" width="18" height="12" rx="2.5"/><circle cx="16.5" cy="13.5" r="1.1"/></svg><span class="navtext">Contributions</span><span class="dropchev">›</span></button>
 <div class="navsubmenu" id="contributionSubmenu">
 <button type="button" onclick="openContributionNavAction('add')">＋ Add Monthly Contribution</button>
 <button type="button" data-page="contributions" onclick="closeContributionMenu();showPage('contributions')">▦ Current Month Contribution</button>
 <button type="button" onclick="openContributionNavAction('previous')">◷ Previous Contributions</button>
 </div></div>
 <div class="navdropdown" id="loanNavGroup">
-<button class="navbtn navdrop-trigger" type="button" aria-expanded="false" aria-controls="loanSubmenu" onclick="showPage('loanHub')">🏦 <span class="navtext">Loans</span><span class="dropchev">›</span></button>
+<button class="navbtn navdrop-trigger" type="button" aria-expanded="false" aria-controls="loanSubmenu" onclick="showPage('loanHub')"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg><span class="navtext">Loans</span><span class="dropchev">›</span></button>
 <div class="navsubmenu" id="loanSubmenu">
 <button type="button" class="loan-apply-nav" onclick="openLoanNavAction('new')">＋ New Loan / Apply Top-up Loan</button>
 <button type="button" onclick="openLoanNavAction('active')">◉ Active Loans</button>
 <button type="button" onclick="openLoanNavAction('closed')">✓ Closed Loans</button>
 </div></div>
-<button class="navbtn" data-page="calculators" onclick="showPage('calculators')">🧮 <span class="navtext">Calculators</span></button>
-<button class="navbtn" data-page="repayments" onclick="showPage('repayments')">💵 <span class="navtext">Loan Repayment</span></button>
-<button class="navbtn" data-page="ledger" onclick="showPage('ledger')">📒 <span class="navtext">Ledger</span></button>
+<button class="navbtn" data-page="calculators" onclick="showPage('calculators')"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7.5h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/></svg><span class="navtext">Calculators</span></button>
+<button class="navbtn" data-page="repayments" onclick="showPage('repayments')"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5.3L4 15"/><path d="M4 20v-5h5"/></svg><span class="navtext">Loan Repayment</span></button>
+<button class="navbtn" data-page="ledger" onclick="showPage('ledger')"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg><span class="navtext">Ledger</span></button>
 <div class="navgroup">Tools</div>
-<button class="navbtn" data-page="reports" onclick="showPage('reports')">📑 <span class="navtext">Reports</span></button>
-<button class="navbtn admin-only" data-page="settings" onclick="showPage('settings')">⚙️ <span class="navtext">Settings</span></button>
+<button class="navbtn" data-page="reports" onclick="showPage('reports')"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg><span class="navtext">Reports</span></button>
+<button class="navbtn admin-only" data-page="settings" onclick="showPage('settings')"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.4M12 18.8v2.4M4.6 6.4l1.7 1.7M17.7 15.9l1.7 1.7M2.8 12h2.4M18.8 12h2.4M4.6 17.6l1.7-1.7M17.7 8.1l1.7-1.7"/></svg><span class="navtext">Settings</span></button>
 </aside>
 <main class="content">
 <section id="dashboardPage">
@@ -507,7 +509,7 @@ input,select,textarea,.search,.field input,.field select{background:#f9fcff!impo
 <button class="navhub-card navhub-red" onclick="openLoanNavAction('active')"><span class="navhub-icon">◉</span><span class="navhub-title">Active Loans</span><span class="navhub-desc">View only active loans, outstanding amounts and each loan's history.</span><span class="navhub-link">View active loans →</span></button>
 <button class="navhub-card navhub-green" onclick="openLoanNavAction('closed')"><span class="navhub-icon">✓</span><span class="navhub-title">Closed Loans</span><span class="navhub-desc">Review settled loans and open their repayment/top-up history.</span><span class="navhub-link">View closed loans →</span></button>
 </div></section>
-<section id="contributionsPage" class="hidden"><div class="toprow"><div><h1>Contributions</h1><div class="muted">Monthly member contributions — easy entry, fine Yes/No, and previous records can be changed</div></div><div class="toolbar"><button class="btn primary admin-only" onclick="openContributionModal()">+ Current Contribution</button><button class="btn soft" onclick="openPreviousContributions()">📅 Previous Contribution</button></div></div><div class="card"><div class="toprow" style="margin-bottom:12px"><div><b>Current Month: <span id="currentContributionMonth"></span></b><div class="muted">यहाँ केवल current month की contribution दिखाई जाएगी. पुराने records के लिए 📅 Previous Contribution खोलें.</div></div><div class="toolbar"><input id="contribSearch" class="search" placeholder="Search member..." oninput="renderContributions()"><button class="btn soft small" onclick="exportContributions()">Export CSV</button></div></div><div class="notice" style="margin-bottom:14px">जिस member की current month contribution नहीं हुई है, उसके सामने <b>+ Add Contribution</b> मिलेगा. Member के नाम पर click करके उसका पूरा dashboard/profile history खोल सकते हैं.</div><div id="currentContributionSummary" class="stats" style="margin-bottom:14px"></div><div class="tablewrap"><table class="table"><thead><tr><th>S. No.</th><th>Member</th><th>Current Month</th><th>Amount</th><th>Fine</th><th>Paid On</th><th>Due Months / Contribution</th><th>Late Fine Due</th>${isAdmin?'<th>Action</th>':''}</tr></thead><tbody id="contribRows"></tbody></table></div></div></section>
+<section id="contributionsPage" class="hidden"><div class="toprow"><div><h1>Contributions</h1><div class="muted">Monthly member contributions — easy entry, fine Yes/No, and previous records can be changed</div></div><div class="toolbar"><button class="btn primary admin-only" onclick="openContributionModal()">+ Current Contribution</button><button class="btn soft" onclick="openPreviousContributions()">📅 Previous Contribution</button></div></div><div class="card"><div class="toprow" style="margin-bottom:12px"><div><b>Current Month: <span id="currentContributionMonth"></span></b><div class="muted">यहाँ केवल current month की contribution दिखाई जाएगी. पुराने records के लिए 📅 Previous Contribution खोलें.</div></div><div class="toolbar"><input id="contribSearch" class="search" placeholder="Search member..." oninput="renderContributions()"><button class="btn soft small" onclick="exportContributions()">Export CSV</button></div></div><div class="notice" style="margin-bottom:14px">जिस member की current month contribution नहीं हुई है, उसके सामने <b>+ Add Contribution</b> मिलेगा. Member के नाम पर click करके उसका पूरा dashboard/profile history खोल सकते हैं.</div><div id="currentContributionSummary" class="stats" style="margin-bottom:14px"></div><div class="tablewrap"><table class="table"><thead><tr><th>S. No.</th><th>Member</th><th>Current Month</th><th>Amount</th><th>Fine</th><th>Paid On</th><th>Due Months / Contribution</th><th>Late Fine Due</th><th class="sfg-admin-th">Action</th></tr></thead><tbody id="contribRows"></tbody></table></div></div></section>
 <section id="loansPage" class="hidden"><div class="toprow"><div><h1>Loans</h1><div class="muted">Monthly interest, current/closed and top-up history</div></div><div class="toolbar"><button class="btn closed-loan-btn" onclick="openClosedLoans()">✓ Closed Loans</button><button class="btn danger admin-only" onclick="resetAllLoanData()">🗑️ Reset All Loan Data</button></div></div><div class="stats loan-top-stats"><div class="card statcard"><div class="statlabel">ACTIVE LOAN AMOUNT</div><div id="loanActiveAmount" class="statvalue">₹0</div><div class="statmeta">Active loans में distributed principal</div></div><div class="card statcard"><div class="statlabel">ACTIVE LOAN MEMBERS</div><div id="loanActiveMembers" class="statvalue">0</div><div class="statmeta">जिन members के active loans हैं</div></div><div class="card statcard"><div class="statlabel">TOTAL OUTSTANDING</div><div id="loanTotalOutstanding" class="statvalue">₹0</div><div class="statmeta">Active loans में अभी बाकी रकम</div></div></div><div class="card" style="margin-top:16px"><div class="toolbar"><input id="loanSearch" class="search" placeholder="Search member..." oninput="renderLoans()"><label class="toggle"><input id="showMerged" type="checkbox" onchange="renderLoans()"> Show merged history</label></div><div class="tablewrap"><table class="table"><thead><tr><th>Member</th><th>Date</th><th>Type</th><th>EMI</th><th>Principal</th><th>Principal Paid</th><th>Principal Outstanding</th><th>Interest Paid</th><th>Interest Due</th><th>Total Outstanding</th><th>Status</th><th>Action</th></tr></thead><tbody id="loanRows"></tbody></table></div></div></section>
 <section id="calculatorsPage" class="hidden">
 <div class="toprow"><div><h1>Loan & EMI Calculators</h1><div class="muted">Loan estimate और detailed EMI schedule एक ही जगह</div></div></div>
@@ -864,7 +866,7 @@ function closeNavSubmenu(group){if(!group)return;const menu=group._portalMenu||g
 function toggleLoanMenu(){const g=document.getElementById('loanNavGroup');if(!g)return;const open=!g.classList.contains('open');closeContributionMenu();closeLoanMenu();if(open)openNavSubmenu(g);}
 function closeLoanMenu(){closeNavSubmenu(document.getElementById('loanNavGroup'));}
 function openLoanNavAction(action){closeLoanMenu();if(action==='new'){openLoanTypeChooser();return;}if(action==='simple'){openLoanModal('simple');return;}if(action==='emi'){openLoanModal('emi');return;}if(action==='closed'){openClosedLoans();return;}if(action==='active'){openActiveLoans();return;}showPage('loans');}
-function openLoanTypeChooser(){if(!requireAdmin())return;openModal(`<div class="modalhead"><div><h2 style="margin:0">New Loan / Apply Top-up Loan</h2><div class="muted">पहले loan type चुनें</div></div><button class="close" onclick="closeModal()">×</button></div><div class="formgrid" style="margin-top:18px"><button class="card statcard loan-type-choice" style="cursor:pointer;text-align:left;padding:24px" onclick="openLoanModal('simple')"><div class="statlabel">↗ SIMPLE LOAN</div><div class="muted">Monthly interest on outstanding principal</div></button><button class="card statcard loan-type-choice" style="cursor:pointer;text-align:left;padding:24px" onclick="openLoanModal('emi')"><div class="statlabel">▦ EMI LOAN</div><div class="muted">Fixed EMI with principal + interest schedule</div></button></div><div class="formactions"><button class="btn soft" onclick="closeModal()">Cancel</button></div>`)}
+function openLoanTypeChooser(){if(!requireAdmin())return;openModal(`<div class="modalhead"><div><h2 style="margin:0">New Loan / Apply Top-up Loan</h2><div class="muted">पहले loan type चुनें</div></div><button class="close" onclick="closeModal()">×</button></div><div class="formgrid" style="margin-top:18px"><button class="card statcard loan-type-choice" style="cursor:pointer;text-align:left;padding:24px" onclick="openLoanModal('simple')"><div class="statlabel">↗ Simple loan</div><div class="muted">Monthly interest on outstanding principal</div></button><button class="card statcard loan-type-choice" style="cursor:pointer;text-align:left;padding:24px" onclick="openLoanModal('emi')"><div class="statlabel">▦ EMI loan</div><div class="muted">Fixed EMI with principal + interest schedule</div></button></div><div class="formactions"><button class="btn soft" onclick="closeModal()">Cancel</button></div>`)}
 
 function toggleContributionMenu(){const g=document.getElementById('contributionNavGroup');if(!g)return;const open=!g.classList.contains('open');closeLoanMenu();closeContributionMenu();if(open)openNavSubmenu(g);}
 function closeContributionMenu(){closeNavSubmenu(document.getElementById('contributionNavGroup'));}
@@ -943,7 +945,7 @@ function renderWowDashboard(active,con,fine,interestPaid,interestDue,out,current
   const ids={wowBalance:money(balance),wowContrib:money(con),wowFine:money(fine),wowInterest:money(interestPaid),wowMembers:String(active),wowActiveLoan:money(currentLoanAmount),wowDistributed:money(totalLoanDistributed),wowBorrowers:String(current),wowClosed:String(closed),wowLegendBalance:money(balance),wowLegendLoan:money(currentLoanAmount),wowLegendInterest:money(interestPaid),wowPulseMembers:String(active),wowPulseCurrent:String(current),wowPulseDue:money(out),wowPulseFine:money(fine),wowPulseInterest:money(interestPaid),wowPulseClosed:String(closed)};
   Object.entries(ids).forEach(([id,v])=>{const el=$(id);if(el)el.textContent=v});
   const base=Math.max(1,balance+currentLoanAmount+interestPaid); const bp=Math.min(100,balance/base*100),lp=Math.min(100,currentLoanAmount/base*100),ip=Math.min(100,interestPaid/base*100); ['wowBarBalance','wowBarLoan','wowBarInterest'].forEach((id,i)=>{const el=$(id);if(el)el.style.width=[bp,lp,ip][i]+'%'});
-  const ratio=totalLoanDistributed>0?Math.min(100,(currentLoanAmount/totalLoanDistributed)*100):0; const ring=$("wowRing"); if(ring)ring.style.background=`conic-gradient(#7c3aed 0deg ${ratio*3.6}deg,#e5e7eb ${ratio*3.6}deg 360deg)`; const rt=$("wowRingText");if(rt)rt.textContent=Math.round(ratio)+'%';
+  const ratio=totalLoanDistributed>0?Math.min(100,(currentLoanAmount/totalLoanDistributed)*100):0; const ring=$("wowRing"); if(ring)ring.style.background=`conic-gradient(#b8862b 0deg ${ratio*3.6}deg,#e3e9e5 ${ratio*3.6}deg 360deg)`; const rt=$("wowRingText");if(rt)rt.textContent=Math.round(ratio)+'%';
 }
 
 function renderDashboard(){
@@ -1816,6 +1818,554 @@ button{font-weight:700}button:focus-visible,a:focus-visible,input:focus-visible,
     }
   });
 })();
+</script>
+<style id="sfg-v196-redesign">
+/* =====================================================================
+   Sharma Finance Group — V195 redesign layer
+   Visual identity: bahi-khata (ledger book) discipline in deep emerald ink,
+   brass rules and clean paper surfaces. Pure presentation: no markup ids,
+   handlers or logic are changed. Rules avoid setting `display` on anything
+   the app toggles with .hidden / .admin-only / .open.
+   ===================================================================== */
+:root{
+  --k-ink:#0E2A24; --k-green:#0F4A3D; --k-green2:#17705A; --k-green3:#E4F0EA;
+  --k-brass:#B8862B; --k-brass-lt:#E8C77A; --k-brass-soft:#F6EDD3;
+  --k-canvas:#EFF3F0; --k-paper:#FFFFFF; --k-text:#14241F; --k-muted:#5A6B64; --k-rule:#D9E1DB; --k-rule2:#E8EEE9;
+  --k-pos:#1B7A4E; --k-neg:#B0352D; --k-warn:#98630A; --k-info:#2B5B99;
+  --f-display:'Bricolage Grotesque','Noto Sans Devanagari',system-ui,sans-serif;
+  --f-body:'Instrument Sans','Noto Sans Devanagari',system-ui,-apple-system,'Segoe UI',sans-serif;
+  /* remap legacy tokens so older rules inherit the new palette */
+  --nav:#0F4A3D; --nav2:#17705A; --accent:#17705A; --bg:#EFF3F0; --card:#fff; --text:#14241F; --muted:#5A6B64;
+  --line:#D9E1DB; --green:#1B7A4E; --red:#B0352D; --amber:#98630A; --shadow:none; --page:#EFF3F0; --surface:#fff;
+}
+
+/* ---------- base ---------- */
+html body{font-family:var(--f-body)!important;background:var(--k-canvas)!important;color:var(--k-text)!important;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html body button,html body input,html body select,html body textarea{font-family:var(--f-body)}
+html body h1,html body h2,html body h3,html body h4{font-family:var(--f-display)!important;letter-spacing:-.015em;color:var(--k-ink)}
+html body :focus-visible{outline:2px solid var(--k-brass)!important;outline-offset:2px}
+html body ::selection{background:var(--k-brass-lt);color:var(--k-ink)}
+html body .muted{color:var(--k-muted)!important;font-size:13px}
+
+/* ---------- top bar: deep emerald with a double brass rule ---------- */
+html body .appbar{height:64px!important;background:var(--k-green)!important;background-image:none!important;border:0!important;box-shadow:none!important;padding:0 28px!important}
+html body .appbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;border-top:1px solid var(--k-brass);border-bottom:1px solid var(--k-brass);opacity:.9;pointer-events:none}
+html body .appbar .logo,html body .loginbrand .logo{width:40px!important;height:40px!important;border-radius:9px!important;background:transparent!important;border:1.5px solid var(--k-brass)!important;color:var(--k-brass-lt)!important;font:800 15px var(--f-display)!important;letter-spacing:.02em;box-shadow:none!important}
+html body .brand b{font:700 18px var(--f-display)!important;color:#fff!important;letter-spacing:-.01em}
+html body .brand small{color:#A8C9BD!important;font-size:12px!important;margin-top:1px}
+html body .today-chip{background:transparent!important;border:0!important;box-shadow:none!important;color:#CBE2D8!important;font-size:12px!important;padding:0 4px!important}
+html body .today-chip .today-icon{color:var(--k-brass-lt)!important}
+html body .user-menu-trigger{background:transparent!important;border:1px solid rgba(255,255,255,.2)!important;border-radius:11px!important;box-shadow:none!important;color:#fff!important}
+html body .user-menu-trigger:hover,html body .user-menu-trigger[aria-expanded="true"]{background:rgba(255,255,255,.09)!important;border-color:var(--k-brass)!important}
+html body .president-avatar{border:2px solid var(--k-brass)!important;background:var(--k-green2)!important;color:#fff!important}
+html body .user-menu-labels b{color:#fff!important;font-weight:600}
+html body .user-menu-labels small{color:#A8C9BD!important}
+html body .menu-chevron{color:var(--k-brass-lt)!important}
+html body .user-dropdown{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;border-radius:12px!important;box-shadow:0 18px 44px rgba(14,42,36,.2)!important;padding:6px!important}
+html body .user-dropdown .dropdown-heading{background:var(--k-green3)!important;border-radius:8px!important;color:var(--k-ink)!important}
+html body .user-dropdown .dropdown-heading b{color:var(--k-ink)!important}
+html body .user-dropdown .dropdown-heading small{color:var(--k-muted)!important}
+html body .user-dropdown .dropdown-crown{color:var(--k-brass)!important}
+html body .user-dropdown button{background:transparent!important;color:var(--k-text)!important;border-radius:8px!important;font-weight:600!important;box-shadow:none!important}
+html body .user-dropdown button:hover{background:#F0F5F1!important;color:var(--k-green)!important}
+html body .user-dropdown .logout-option,html body .user-dropdown .logout-option:hover{color:var(--k-neg)!important}
+
+/* ---------- primary navigation: white rail, brass marker = current page ---------- */
+html body .appbar::before{display:none!important}
+html body .side{position:fixed!important;top:64px!important;bottom:0!important;left:0!important;width:248px!important;height:auto!important;background:#fff!important;background-image:none!important;border:0!important;border-right:1px solid var(--k-rule)!important;box-shadow:none!important;padding:16px 12px!important;overflow-y:auto!important;overflow-x:hidden!important;white-space:normal!important}
+html body .side .navgroup{display:block!important;margin:18px 12px 6px!important;font:600 12px var(--f-body)!important;letter-spacing:0!important;text-transform:none!important;color:#8A9A93!important}
+html body .side .navgroup:first-child{margin-top:4px!important}
+html body .side .navbtn{width:100%!important;text-align:left!important;background:transparent!important;background-image:none!important;color:#41554D!important;border:0!important;border-radius:9px!important;box-shadow:none!important;transform:none!important;margin:2px 0!important;padding:11px 12px!important;font:600 14px var(--f-body)!important;align-items:center}
+html body .side .navbtn *{color:inherit!important}
+html body .side .navbtn::before,html body .side .navbtn::after{display:none!important}
+html body .side .navbtn .ni{width:18px;height:18px;flex:0 0 18px;margin-right:11px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html body .side .navbtn:hover{background:#F2F6F3!important;color:var(--k-green)!important}
+html body .side .navbtn.active{background:var(--k-green3)!important;color:var(--k-green)!important;box-shadow:inset 3px 0 0 var(--k-brass)!important}
+html body .side .navbtn.active .ni{stroke:var(--k-green)}
+html body .side .navdropdown{display:block!important;width:100%}
+html body .side .dropchev{background:transparent!important;color:#8A9A93!important;margin-left:auto!important;width:auto!important;height:auto!important}
+html body .navdropdown.open>.navdrop-trigger{background:#F2F6F3!important;color:var(--k-green)!important;box-shadow:none!important}
+html body .navsubmenu,html body #contributionNavGroup .navsubmenu,html body #loanNavGroup .navsubmenu{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;border-radius:12px!important;box-shadow:0 18px 44px rgba(14,42,36,.18)!important;padding:6px!important;min-width:min(290px,86vw)!important;backdrop-filter:none!important;gap:2px!important}
+html body #contributionNavGroup .navsubmenu::before,html body #loanNavGroup .navsubmenu::before{content:none!important;display:none!important}
+html body .navsubmenu button,html body #contributionNavGroup .navsubmenu button,html body #loanNavGroup .navsubmenu button{background:transparent!important;background-image:none!important;color:var(--k-text)!important;border:0!important;border-radius:8px!important;box-shadow:none!important;transform:none!important;min-height:42px!important;padding:10px 12px!important;font:600 13px var(--f-body)!important}
+html body .navsubmenu button::after,html body #contributionNavGroup .navsubmenu button::after,html body #loanNavGroup .navsubmenu button::after{color:#9BAAA3!important}
+html body .navsubmenu button:hover,html body .navsubmenu button:focus-visible,html body #contributionNavGroup .navsubmenu button:hover,html body #loanNavGroup .navsubmenu button:hover{background:#EFF5F1!important;color:var(--k-green)!important;border:0!important;box-shadow:none!important}
+html body .navsubmenu .loan-apply-nav{box-shadow:inset 3px 0 0 var(--k-brass)!important}
+
+/* ---------- page frame ---------- */
+html body .content{margin-left:248px!important;width:calc(100% - 248px)!important;max-width:none!important;padding:30px 36px 72px!important}
+html body .content>section{max-width:1400px}
+html body .toprow{margin-bottom:20px!important}
+html body .toprow h1{font:700 30px/1.15 var(--f-display)!important;letter-spacing:-.025em!important;color:var(--k-ink)!important;margin:0 0 4px!important;text-shadow:none!important}
+html body .toprow h1::before,html body .toprow h1::after{display:none!important}
+
+/* ---------- buttons ---------- */
+html body .btn{background:var(--k-green)!important;background-image:none!important;color:#fff!important;border:1px solid var(--k-green)!important;border-radius:9px!important;box-shadow:none!important;font-weight:600!important;font-size:13px!important;padding:9px 15px!important;letter-spacing:0!important;text-shadow:none!important;transition:background .15s,border-color .15s,color .15s!important;transform:none!important}
+html body .btn:hover{background:#0B3A30!important;border-color:#0B3A30!important;filter:none!important;transform:none!important}
+html body .btn.primary,html body .btn.primary.small,html body .btn.primary.full{background:var(--k-green)!important;background-image:none!important;border-color:var(--k-green)!important;color:#fff!important}
+html body .btn.primary:hover{background:#0B3A30!important;border-color:#0B3A30!important}
+html body .btn.small{padding:6px 11px!important;font-size:12px!important;border-radius:8px!important}
+html body .btn.soft,html body .btn.loan-member-btn,html body .loan-member-btn{background:#fff!important;color:var(--k-green)!important;border:1px solid var(--k-rule)!important}
+html body .btn.soft:hover,html body .loan-member-btn:hover{background:#F2F6F3!important;border-color:#BFCDC5!important;color:var(--k-green)!important}
+html body .btn.danger{background:var(--k-neg)!important;border-color:var(--k-neg)!important;color:#fff!important}
+html body .btn.danger:hover{background:#8E2923!important;border-color:#8E2923!important}
+html body .btn.closed-loan-btn,html body .closed-loan-btn{background:var(--k-ink)!important;border:1px solid var(--k-ink)!important;color:#fff!important;box-shadow:none!important}
+html body .btn.closed-loan-btn:hover{background:#06161A!important;filter:none!important}
+html body .close{background:#fff!important;color:var(--k-green)!important;border:1px solid var(--k-rule)!important;border-radius:8px!important}
+
+/* ---------- cards, stats ---------- */
+html body .card{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;border-radius:12px!important;box-shadow:none!important}
+html body .stats{gap:14px!important}
+html body .statcard{padding:18px 20px!important}
+html body .statlabel{display:block;text-transform:lowercase!important;letter-spacing:0!important;font-size:13px!important;font-weight:600!important;color:var(--k-muted)!important}
+html body .statlabel::first-letter{text-transform:uppercase}
+html body .statvalue{font:700 28px/1.1 var(--f-display)!important;letter-spacing:-.025em!important;color:var(--k-ink)!important;margin-top:8px!important;font-variant-numeric:tabular-nums}
+html body .statmeta{font-size:12px!important;color:#6A7A73!important;margin-top:6px!important}
+html body .dash-click{cursor:pointer;transition:border-color .15s,box-shadow .15s!important}
+html body .dash-click:hover{border-color:var(--k-brass)!important;box-shadow:0 8px 22px rgba(14,42,36,.08)!important;transform:none!important}
+html body #calculatorsPage .statvalue,html body .loan-top-stats .statvalue{font-size:24px!important}
+
+/* ---------- notices ---------- */
+html body .notice{background:var(--k-brass-soft)!important;color:#6A4C0C!important;border:1px solid #E6D3A0!important;border-left:3px solid var(--k-brass)!important;border-radius:8px!important;font-size:13px!important}
+
+/* ---------- tables: ledger header with a double brass rule ---------- */
+html body .table{border-collapse:separate!important;border-spacing:0!important}
+html body .table th{background:#F4F7F4!important;color:var(--k-muted)!important;font:600 12px var(--f-body)!important;text-transform:none!important;letter-spacing:.01em!important;padding:11px 12px!important;border-top:1px solid var(--k-rule)!important;border-bottom:3px double #CDB57E!important}
+html body .table td{padding:12px!important;font-size:13px!important;border-bottom:1px solid var(--k-rule2)!important;color:var(--k-text)!important;font-variant-numeric:tabular-nums}
+html body .table tbody tr:hover td{background:#F8FAF8!important}
+html body .compact .table th,html body .compact .table td{padding:7px 10px!important}
+
+/* ---------- badges ---------- */
+html body .badge{border-radius:6px!important;font-size:11px!important;font-weight:700!important;padding:3px 8px!important;letter-spacing:.02em!important;border:0!important}
+html body .badge.green{background:#E1F2E9!important;color:#17673F!important}
+html body .badge.red{background:#FBE5E2!important;color:#A02B24!important}
+html body .badge.amber{background:#FAEECF!important;color:#855600!important}
+html body .badge.blue{background:#E1EAF6!important;color:#244E88!important}
+
+/* ---------- forms ---------- */
+html body .field label{font-size:12.5px!important;font-weight:600!important;color:#2C413A!important;letter-spacing:0!important;text-transform:none!important}
+html body input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]):not([type=color]),html body select,html body textarea,html body .search{border:1px solid #C6D2CB!important;border-radius:9px!important;background:#fff!important;color:var(--k-text)!important;font-size:14px;box-shadow:none}
+html body input:not([type=checkbox]):not([type=radio]):not([type=file]):focus,html body select:focus,html body textarea:focus,html body .search:focus{border-color:var(--k-green2)!important;box-shadow:0 0 0 3px rgba(23,112,90,.16)!important;outline:none!important}
+html body input[type=checkbox],html body input[type=radio]{accent-color:var(--k-green2)}
+html body .settings-save-actions{background:#F6F9F6!important;border:1px solid var(--k-rule)!important;border-radius:12px!important}
+html body .settingsrow{border-bottom:1px solid var(--k-rule2)!important}
+
+/* ---------- member cards: paper, not dark tiles ---------- */
+html body .membergrid{gap:14px!important}
+html body .membergrid .membercard,html body .membercard{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;border-radius:12px!important;box-shadow:none!important;color:var(--k-text)!important;min-height:0!important;padding:16px!important;transform:none!important;perspective:none!important;transition:border-color .15s,box-shadow .15s!important}
+html body .membercard::before,html body .membercard::after{display:none!important}
+html body .membercard:hover{border-color:var(--k-green2)!important;box-shadow:0 8px 24px rgba(14,42,36,.09)!important;transform:none!important}
+html body .membercard .memberhead,html body .membercard .memberstats,html body .membercard .profilehint,html body .membercard .actions{transform:none!important}
+html body .membercard .avatar{width:50px!important;height:50px!important;min-width:50px!important;max-width:50px!important;flex:0 0 50px!important;background:var(--k-green)!important;background-image:none!important;border:2px solid var(--k-brass)!important;color:#fff!important;font:700 15px var(--f-display)!important;box-shadow:none!important}
+html body .membercard .membername,html body .officer-membercard .membername{color:var(--k-ink)!important;font:700 16px/1.25 var(--f-display)!important;letter-spacing:-.01em!important;text-shadow:none!important}
+html body .membercard .memberphone,html body .membercard .profilehint{color:var(--k-muted)!important;font-size:12.5px!important}
+html body .membercard .memberstats{gap:8px!important;margin-top:14px!important}
+html body .membercard .mini,html body .officer-membercard .mini{background:#F5F8F5!important;border:1px solid #E3EAE5!important;border-radius:9px!important;box-shadow:none!important;padding:10px 12px!important}
+html body .membercard .mini span{color:var(--k-muted)!important;text-transform:none!important;letter-spacing:0!important;font-size:12px!important}
+html body .membercard .mini b{color:var(--k-ink)!important;font:700 17px/1.15 var(--f-display)!important;font-variant-numeric:tabular-nums}
+html body .membercard .badge.green{background:#E1F2E9!important;color:#17673F!important}
+html body .membercard .badge.red{background:#FBE5E2!important;color:#A02B24!important}
+html body .membercard .btn.soft{background:#fff!important;color:var(--k-green)!important;border:1px solid var(--k-rule)!important}
+html body .officer-membercard{background:#FFFCF3!important;border-color:#DDC27C!important}
+html body .officer-membercard:hover{border-color:var(--k-brass)!important}
+html body .officer-membercard .avatar{border-color:var(--k-brass-lt)!important;box-shadow:0 0 0 3px var(--k-brass-soft)!important}
+html body .officer-role,html body .officer-membercard .officer-role{background:var(--k-brass-soft)!important;background-image:none!important;color:#7A5410!important;border:1px solid #E3CE98!important;border-radius:6px!important;font-size:11.5px!important;font-weight:700!important;padding:3px 8px!important;text-shadow:none!important}
+
+/* ---------- centre pages (Contributions / Loans hubs) ---------- */
+html body .navhub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+html body .navhub-card{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;border-top:3px solid var(--k-brass)!important;border-radius:12px!important;box-shadow:none!important;color:var(--k-text)!important;text-align:left;padding:22px!important;display:flex;flex-direction:column;gap:8px;min-height:190px;transform:none!important;transition:border-color .15s,box-shadow .15s!important}
+html body .navhub-card:hover{box-shadow:0 10px 26px rgba(14,42,36,.1)!important;transform:none!important}
+html body .navhub-card.navhub-green{border-top-color:var(--k-pos)!important}
+html body .navhub-card.navhub-purple{border-top-color:var(--k-info)!important}
+html body .navhub-card.navhub-red{border-top-color:var(--k-neg)!important}
+html body .navhub-icon{width:42px;height:42px;border-radius:10px;background:var(--k-brass-soft)!important;color:#7A5410!important;display:grid;place-items:center;font-size:20px;box-shadow:none!important}
+html body .navhub-green .navhub-icon{background:#E1F2E9!important;color:#17673F!important}
+html body .navhub-purple .navhub-icon{background:#E1EAF6!important;color:#244E88!important}
+html body .navhub-red .navhub-icon{background:#FBE5E2!important;color:#A02B24!important}
+html body .navhub-title{font:700 18px/1.25 var(--f-display)!important;color:var(--k-ink)!important;letter-spacing:-.01em}
+html body .navhub-desc{color:var(--k-muted)!important;font-size:13.5px;line-height:1.5}
+html body .navhub-link{margin-top:auto;color:var(--k-green)!important;font-weight:700;font-size:13px}
+
+/* ---------- dashboard: the ledger-book hero ---------- */
+html body #dashboardPage .dashboard-wow{background:none!important;background-image:none!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:0!important;overflow:visible!important}
+html body #dashboardPage .dashboard-wow::before,html body #dashboardPage .dashboard-wow::after{display:none!important}
+html body #dashboardPage .wow-top{padding:0!important;gap:16px!important;grid-template-columns:minmax(0,1.65fr) minmax(280px,.8fr)!important}
+html body #dashboardPage .dashboard-wow .wow-balance-card{--m:40px;position:relative;min-height:290px!important;border:0!important;border-radius:14px!important;padding:32px 32px 28px calc(var(--m) + 28px)!important;color:#fff!important;box-shadow:none!important;overflow:hidden;
+  background-color:var(--k-green)!important;
+  background-image:
+    linear-gradient(90deg,transparent var(--m),rgba(232,199,122,.7) var(--m),rgba(232,199,122,.7) calc(var(--m) + 1px),transparent calc(var(--m) + 1px),transparent calc(var(--m) + 5px),rgba(232,199,122,.4) calc(var(--m) + 5px),rgba(232,199,122,.4) calc(var(--m) + 6px),transparent calc(var(--m) + 6px)),
+    repeating-linear-gradient(180deg,transparent 0,transparent 35px,rgba(255,255,255,.07) 35px,rgba(255,255,255,.07) 36px)!important;
+  backdrop-filter:none!important}
+html body #dashboardPage .dashboard-wow .wow-balance-card::before,html body #dashboardPage .dashboard-wow .wow-balance-card::after{display:none!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-kicker2{font:600 13px/1.4 var(--f-body)!important;letter-spacing:.09em!important;color:var(--k-brass-lt)!important;margin-bottom:14px!important;text-shadow:none!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-balance2{font:800 clamp(46px,6.4vw,84px)/1 var(--f-display)!important;letter-spacing:-.04em!important;color:#fff!important;text-shadow:none!important;background:none!important;-webkit-text-fill-color:#fff!important;font-variant-numeric:tabular-nums;margin:6px 0 14px!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-caption{color:#B8D3C8!important;font-size:13px!important;line-height:1.55;max-width:58ch}
+html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-chiprow{gap:10px!important;margin-top:20px!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-chip{background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.2)!important;color:#DCEBE4!important;border-radius:9px!important;padding:8px 12px!important;font-size:13px!important;box-shadow:none!important;transition:background .15s,border-color .15s!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-chip:hover{background:rgba(255,255,255,.15)!important;border-color:var(--k-brass-lt)!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-chip b{color:#fff!important;font-family:var(--f-display);font-variant-numeric:tabular-nums}
+html body #dashboardPage .dashboard-wow .wow-side{gap:16px!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-side .wow-side-card{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;border-radius:12px!important;box-shadow:none!important;padding:20px 22px!important;color:var(--k-text)!important;backdrop-filter:none!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-side .wow-side-card .label{color:var(--k-muted)!important;font:600 13px var(--f-body)!important;text-transform:none!important;letter-spacing:0!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-side .wow-side-card .value{color:var(--k-ink)!important;font:700 28px/1.1 var(--f-display)!important;letter-spacing:-.025em!important;font-variant-numeric:tabular-nums;margin-top:6px}
+html body #dashboardPage .dashboard-wow .wow-top .wow-side .wow-side-card .sub{color:#6A7A73!important;font-size:12px!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-side .wow-side-card .wow-orbit{width:68px!important;height:68px!important;border-radius:50%!important;position:relative;box-shadow:none!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-side .wow-side-card .wow-orbit::before{content:"";position:absolute;inset:8px;border-radius:50%;background:#fff;display:block!important;z-index:0}
+html body #dashboardPage .dashboard-wow .wow-top .wow-side .wow-side-card .wow-orbit::after{display:none!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-side .wow-side-card .wow-orbit span{position:relative;z-index:1;font:700 13px var(--f-display);color:var(--k-ink)!important}
+html body #dashboardPage .dashboard-wow .wow-metric-grid{padding:0!important;margin-top:16px!important;gap:14px!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;perspective:none!important}
+html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;border-left:4px solid var(--k-green2)!important;border-radius:12px!important;box-shadow:none!important;padding:16px 18px!important;min-height:0!important;color:var(--k-text)!important;transform:none!important;transition:border-color .15s,box-shadow .15s!important}
+html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric:hover{box-shadow:0 10px 24px rgba(14,42,36,.09)!important;transform:none!important}
+html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric.purple{border-left-color:var(--k-ink)!important}
+html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric.gold{border-left-color:var(--k-brass)!important}
+html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric.blue{border-left-color:var(--k-info)!important}
+html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric .ml{color:var(--k-muted)!important;font:600 13px var(--f-body)!important;text-transform:none!important;letter-spacing:0!important}
+html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric .mv{color:var(--k-ink)!important;font:700 27px/1.1 var(--f-display)!important;letter-spacing:-.025em!important;margin-top:8px;font-variant-numeric:tabular-nums}
+html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric .ms{color:#6A7A73!important;font-size:12px!important;margin-top:6px}
+html body #dashboardPage .wow-lower{gap:16px!important;margin-top:16px!important}
+html body #dashboardPage .wow-lower .wow-glass{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;border-radius:12px!important;box-shadow:none!important;padding:22px!important;color:var(--k-text)!important;backdrop-filter:none!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-section-head h3{font:700 18px var(--f-display)!important;color:var(--k-ink)!important;margin:0}
+html body #dashboardPage .wow-lower .wow-glass .wow-section-head small{color:var(--k-muted)!important;font-size:12.5px}
+html body #dashboardPage .wow-lower .wow-glass .wow-live{background:#E1F2E9!important;color:#17673F!important;border:0!important;border-radius:6px!important;font:700 11px var(--f-body)!important;padding:4px 9px!important;box-shadow:none!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow{height:16px!important;border-radius:8px!important;background:#E5EBE7!important;overflow:hidden;box-shadow:none!important;border:0!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow .b{background:var(--k-green2)!important;background-image:none!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow .l{background:var(--k-brass)!important;background-image:none!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow .i{background:var(--k-info)!important;background-image:none!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow-legend{gap:12px!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow-legend>div{border-top:3px solid var(--k-rule);padding-top:8px}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow-legend>div:nth-child(1){border-top-color:var(--k-green2)}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow-legend>div:nth-child(2){border-top-color:var(--k-brass)}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow-legend>div:nth-child(3){border-top-color:var(--k-info)}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow-legend b{color:var(--k-ink)!important;font:700 18px var(--f-display)!important;font-variant-numeric:tabular-nums}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow-legend small{color:var(--k-muted)!important;font-size:12px}
+html body #dashboardPage .wow-lower .wow-glass .wow-quick button{background:#F6F9F6!important;background-image:none!important;border:1px solid #E1E9E3!important;border-radius:10px!important;color:var(--k-ink)!important;box-shadow:none!important;text-align:left;padding:14px!important;font-weight:600;transform:none!important;transition:border-color .15s,background .15s!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-quick button:hover{background:#fff!important;border-color:var(--k-green2)!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-quick button small{display:block;color:var(--k-muted)!important;font-weight:500;font-size:12px;margin-top:2px}
+html body #dashboardPage .wow-lower .wow-glass .wow-quick button span{font:700 17px var(--f-display);color:var(--k-ink)!important}
+html body #dashboardPage .sfg-graph-card h3,html body #dashboardPage .grid2 .card h3{font:700 17px var(--f-display)!important;color:var(--k-ink)!important}
+
+/* ---------- full-page workflow views (former pop-ups) ---------- */
+html body .modalback{background:var(--k-canvas)!important}
+html body .modal{background:transparent!important;color:var(--k-text)!important}
+html body .fullpage-modalbar{background:var(--k-green)!important;background-image:none!important;border-bottom:1px solid var(--k-brass);box-shadow:0 3px 0 -1px var(--k-green),0 4px 0 -1px var(--k-brass)!important}
+html body .fullpage-modalbar .fullpage-back{background:transparent!important;color:#fff!important;border:1px solid rgba(255,255,255,.35)!important}
+html body .fullpage-modalbar .fullpage-back:hover{background:rgba(255,255,255,.12)!important}
+html body .fullpage-modalbrand b{font:700 15px var(--f-display)!important;color:#fff!important}
+html body .fullpage-modalbrand small{color:#A8C9BD!important}
+html body .modal>.modalhead h2,html body .modal>.modalhead h3{font:700 24px var(--f-display)!important}
+
+/* ---------- sign-in: brand panel + form ---------- */
+html body .loginwrap{background:var(--k-canvas)!important;background-image:none!important;padding:0!important;grid-template-columns:minmax(0,1.1fr) minmax(380px,.9fr);place-items:stretch!important}
+html body .sfg-login-hero{--m:56px;position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:36px;padding:48px 56px 48px calc(var(--m) + 44px);color:#fff!important;background-color:var(--k-green)!important;
+  background-image:
+    linear-gradient(90deg,transparent var(--m),rgba(232,199,122,.75) var(--m),rgba(232,199,122,.75) calc(var(--m) + 1px),transparent calc(var(--m) + 1px),transparent calc(var(--m) + 6px),rgba(232,199,122,.45) calc(var(--m) + 6px),rgba(232,199,122,.45) calc(var(--m) + 7px),transparent calc(var(--m) + 7px)),
+    repeating-linear-gradient(180deg,transparent 0,transparent 39px,rgba(255,255,255,.07) 39px,rgba(255,255,255,.07) 40px)!important}
+html body .sfg-hero-mark{width:48px;height:48px;border:1.5px solid var(--k-brass);border-radius:10px;display:grid;place-items:center;color:var(--k-brass-lt);font:800 18px var(--f-display);letter-spacing:.02em}
+html body .sfg-hero-copy h2{font:800 clamp(34px,4.2vw,56px)/1.12 var(--f-display)!important;letter-spacing:-.02em;color:#fff!important;margin:0 0 18px;max-width:14em}
+html body .sfg-hero-copy p{color:#BAD5CA;font-size:16px;line-height:1.65;max-width:34em;margin:0}
+html body .sfg-hero-points,html body .sfg-hero-points li{color:#DCEBE4!important}
+html body .sfg-hero-copy p{color:#BAD5CA!important}
+html body .sfg-hero-points{list-style:none;margin:0;padding:0;display:grid;gap:10px;color:#DCEBE4;font-size:14.5px}
+html body .sfg-hero-points li{padding-left:22px;position:relative}
+html body .sfg-hero-points li::before{content:"";position:absolute;left:0;top:.6em;width:10px;height:1px;background:var(--k-brass-lt);box-shadow:0 3px 0 var(--k-brass-lt)}
+html body .sfg-hero-points li{line-height:1.5}
+html body .loginbox{align-self:center;justify-self:center;width:min(440px,calc(100% - 48px))!important;background:#fff!important;border:1px solid var(--k-rule)!important;border-radius:16px!important;box-shadow:0 24px 60px rgba(14,42,36,.1)!important;padding:32px!important;margin:32px 0}
+html body .loginbrand{text-align:left!important;margin-bottom:22px!important}
+html body .loginbrand .logo{display:none!important}
+html body .loginbrand h1{color:var(--k-ink)!important;font:700 26px/1.15 var(--f-display)!important;margin:0 0 4px!important;letter-spacing:-.02em}
+html body .loginbrand p{color:var(--k-muted)!important;font-size:13px!important}
+html body .loginbox .notice{background:#EEF5F0!important;color:#254A3F!important;border:1px solid #D3E3DA!important;border-left:3px solid var(--k-green2)!important}
+html body .loginbox #adminTab,html body .loginbox #memberTab{flex:1;justify-content:center;padding:9px 12px!important}
+html body .loginbox .full{padding:12px 16px!important;font-size:14px!important}
+html body .login-error{border-radius:9px!important}
+
+/* ---------- responsive ---------- */
+@media(max-width:1050px){
+  html body #dashboardPage .dashboard-wow .wow-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html body .navhub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:900px){
+  html body .loginwrap{grid-template-columns:1fr}
+  html body .sfg-login-hero{padding:28px 24px 28px calc(var(--m) + 28px);--m:30px;gap:18px}
+  html body .sfg-hero-points{display:none}
+  html body .sfg-hero-copy h2{font-size:30px!important;margin-bottom:10px}
+  html body .sfg-hero-copy p{font-size:14px}
+  html body .loginbox{margin:24px 0 32px;padding:24px!important}
+  html body #dashboardPage .wow-top{grid-template-columns:1fr!important}
+}
+@media(max-width:760px){
+  html body .appbar{padding:0 14px!important}
+  html body .content{padding:20px 14px 56px!important}
+  html body .toprow h1{font-size:25px!important}
+  html body .navhub-grid{grid-template-columns:1fr}
+  html body #dashboardPage .dashboard-wow .wow-balance-card{--m:22px;padding:24px 18px 22px calc(var(--m) + 22px)!important;min-height:250px!important}
+  html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-balance2{font-size:clamp(40px,13vw,58px)!important}
+  html body #dashboardPage .wow-lower .wow-glass .wow-quick{grid-template-columns:1fr!important}
+}
+@media(max-width:520px){
+  html body #dashboardPage .dashboard-wow .wow-metric-grid{grid-template-columns:1fr!important}
+  html body .brand small{display:none}
+}
+@media(prefers-reduced-motion:reduce){html body *{transition:none!important;animation:none!important}}
+
+/* ---------- neutralise legacy decorative layers ---------- */
+html body .statcard::before,html body .statcard::after,html body .card::before,html body .card::after,html body .wow-glass::before,html body .wow-glass::after,html body .wow-metric::before,html body .wow-metric::after,html body .wow-side-card::before,html body .wow-side-card::after,html body .navhub-card::before,html body .navhub-card::after{display:none!important}
+html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric.teal,html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric.purple,html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric.gold,html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric.blue{background:#fff!important;background-image:none!important;box-shadow:none!important}
+html body #dashboardPage .dashboard-wow .wow-metric-grid .wow-metric.teal{border-left-color:var(--k-green2)!important}
+html body .card.statcard,html body .statcard{background-image:none!important;box-shadow:none!important}
+html body #dashboardPage .wow-lower .wow-glass,html body #dashboardPage .dashboard-wow .wow-glass{background:#fff!important;background-image:none!important;box-shadow:none!important}
+html body .loginbrand h1,html body .loginbox .loginbrand h1{color:var(--k-ink)!important}
+/* sidebar width steps: icon rail on small screens */
+@media(max-width:900px){
+  html body .side{width:208px!important}
+  html body .content{margin-left:208px!important;width:calc(100% - 208px)!important;padding:24px 20px 60px!important}
+}
+@media(max-width:640px){
+  html body .side{width:60px!important;padding:12px 6px!important}
+  html body .side .navtext,html body .side .navgroup,html body .side .dropchev{display:none!important}
+  html body .side .navbtn{justify-content:center;padding:12px 0!important}
+  html body .side .navbtn .ni{margin-right:0}
+  html body .content{margin-left:60px!important;width:calc(100% - 60px)!important;padding:18px 12px 56px!important}
+}
+
+/* ---------- second pass: stronger hooks for dashboard internals ---------- */
+html body #dashboardPage .wow-lower .wow-glass .wow-flow-legend>div{background:transparent!important;background-image:none!important;border:0!important;border-top:3px solid var(--k-rule)!important;border-radius:0!important;box-shadow:none!important;padding:8px 0 0!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow-legend>div:nth-child(1){border-top-color:var(--k-green2)!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow-legend>div:nth-child(2){border-top-color:var(--k-brass)!important}
+html body #dashboardPage .wow-lower .wow-glass .wow-flow-legend>div:nth-child(3){border-top-color:var(--k-info)!important}
+html body #dashboardPage .wow-lower .wow-glass,html body #dashboardPage .wow-lower .wow-glass *{text-shadow:none!important}
+html body #dashboardPage .stats .card.statcard,html body #dashboardPage .stats .statcard,html body #dashboardPage .grid2 .card,html body #dashboardPage .sfg-analytics-row .card{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;box-shadow:none!important}
+html body #dashboardPage .stats .statcard:hover{box-shadow:none!important}
+html body #dashboardPage .stats .statcard.dash-click:hover{border-color:var(--k-brass)!important;box-shadow:0 8px 22px rgba(14,42,36,.08)!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-balance2,html body #dashboardPage .dashboard-wow .wow-top .wow-side .wow-side-card .value{text-shadow:none!important;-webkit-text-stroke:0!important;filter:none!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-side .wow-side-card .value{-webkit-text-fill-color:var(--k-ink)!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-kicker2{-webkit-text-fill-color:var(--k-brass-lt)!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-caption{-webkit-text-fill-color:#B8D3C8!important}
+
+html body #dashboardPage .dashboard-wow .wow-top .wow-side .wow-side-card .wow-orbit::before{background:#fff!important;border:0!important}
+html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-chip b,html body #dashboardPage .dashboard-wow .wow-top .wow-balance-card .wow-chip span{color:#fff!important;-webkit-text-fill-color:#fff!important}
+html body .toprow h1{-webkit-text-fill-color:var(--k-ink)!important;-webkit-text-stroke:0!important;background:none!important;filter:none!important}
+
+/* ---------- third pass: headings, member header, avatars ---------- */
+html body .content .toprow h1,html body .content h1{font-weight:700!important;color:var(--k-ink)!important;-webkit-text-fill-color:var(--k-ink)!important;text-shadow:none!important}
+html body .membergrid .membercard .memberhead{display:flex!important;justify-content:space-between;align-items:flex-start;gap:10px}
+html body .membergrid .membercard .memberhead>.badge{flex:0 0 auto}
+html body .membergrid .membercard .avatar,html body .membergrid .membercard .avatar *{color:#fff!important;-webkit-text-fill-color:#fff!important}
+html body .membergrid .membercard .membername{-webkit-text-fill-color:var(--k-ink)!important}
+html body .membergrid .membercard .memberphone{-webkit-text-fill-color:var(--k-muted)!important}
+html body .membergrid .membercard .mini b{-webkit-text-fill-color:var(--k-ink)!important}
+html body .membergrid .membercard .mini span{-webkit-text-fill-color:var(--k-muted)!important}
+html body .membergrid .membercard .badge.green{background:#E1F2E9!important;color:#17673F!important;-webkit-text-fill-color:#17673F!important}
+html body .membergrid .membercard .badge.red{background:#FBE5E2!important;color:#A02B24!important;-webkit-text-fill-color:#A02B24!important}
+html body .membergrid .officer-membercard .officer-role{-webkit-text-fill-color:#7A5410!important}
+
+/* ---------- fourth pass: id-level hooks where legacy rules use #ids ---------- */
+html body #appView .content h1,html body #appView .content .toprow h1{font:700 30px/1.15 var(--f-display)!important;letter-spacing:-.025em!important;color:var(--k-ink)!important;-webkit-text-fill-color:var(--k-ink)!important;text-shadow:none!important;margin:0 0 4px!important}
+html body #appView .membercard .badge.green{background:#E1F2E9!important;color:#17673F!important;-webkit-text-fill-color:#17673F!important}
+html body #appView .membercard .badge.red{background:#FBE5E2!important;color:#A02B24!important;-webkit-text-fill-color:#A02B24!important}
+@media(max-width:760px){html body #appView .content h1,html body #appView .content .toprow h1{font-size:25px!important}}
+
+/* ---------- fifth pass: tables, badges, stat cards on every page ---------- */
+html body #appView .statcard,html body #appView .card.statcard,html body #appView .loan-top-stats .statcard{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;border-radius:12px!important;box-shadow:none!important}
+html body #appView .statcard::before,html body #appView .statcard::after{display:none!important}
+html body #appView .table th{background:#F4F7F4!important;background-image:none!important;color:var(--k-muted)!important;-webkit-text-fill-color:var(--k-muted)!important;font:600 12px var(--f-body)!important;text-transform:none!important;letter-spacing:.01em!important;padding:11px 12px!important;border-top:1px solid var(--k-rule)!important;border-bottom:3px double #CDB57E!important;text-shadow:none!important}
+html body #appView .table td{padding:12px!important;color:var(--k-text)!important;border-bottom:1px solid var(--k-rule2)!important;font-size:13px!important;background:transparent!important}
+html body #appView .table tbody tr:hover td{background:#F7F9F7!important}
+html body #appView .table td b{font-weight:700}
+html body #appView .badge{border-radius:6px!important;font-size:11px!important;font-weight:700!important;padding:3px 8px!important;letter-spacing:.02em!important;border:0!important;text-shadow:none!important;box-shadow:none!important}
+html body #appView .badge.green{background:#E1F2E9!important;color:#17673F!important;-webkit-text-fill-color:#17673F!important}
+html body #appView .badge.red{background:#FBE5E2!important;color:#A02B24!important;-webkit-text-fill-color:#A02B24!important}
+html body #appView .badge.amber{background:#FAEECF!important;color:#855600!important;-webkit-text-fill-color:#855600!important}
+html body #appView .badge.blue{background:#E1EAF6!important;color:#244E88!important;-webkit-text-fill-color:#244E88!important}
+html body #appView .tablewrap{border:1px solid var(--k-rule);border-radius:10px;background:#fff}
+html body #appView .card .toolbar .search{background:#fff!important}
+
+/* ---------- sixth pass: button text inside tables, zebra, calculators, admin column ---------- */
+html body #appView .btn,html body #appView .btn.primary,html body #appView .btn.danger,html body #appView .btn.closed-loan-btn{-webkit-text-fill-color:#fff!important;color:#fff!important}
+html body #appView .btn.soft,html body #appView .btn.loan-member-btn{-webkit-text-fill-color:var(--k-green)!important;color:var(--k-green)!important}
+html body #appView .btn.danger.small,html body #appView .table .btn.danger{background:var(--k-neg)!important;-webkit-text-fill-color:#fff!important;color:#fff!important}
+html body #appView .table tbody tr:nth-child(even) td{background:#FAFCFA!important}
+html body #appView .table tbody tr:hover td{background:#F2F6F3!important}
+html body.member-readonly .sfg-admin-th,html body .member-readonly .sfg-admin-th{display:none!important}
+html body #calculatorsPage .card{container-type:inline-size}
+@container (max-width:620px){html body #calculatorsPage .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+/* ---------- phone top bar ---------- */
+@media(max-width:560px){
+  html body .appbar{gap:8px}
+  html body .brand{min-width:0;gap:9px!important}
+  html body .brand b{font-size:15px!important;white-space:nowrap}
+  html body .appbar .logo{width:34px!important;height:34px!important;font-size:13px!important}
+  html body .today-chip{display:none!important}
+  html body .user-menu-labels{display:none!important}
+  html body .user-menu-trigger{padding:3px 6px 3px 3px!important;gap:2px!important}
+  html body .topbar-right{gap:6px!important}
+}
+
+/* ---------- user menu labels & portaled submenus ---------- */
+html body .user-dropdown button,html body .user-dropdown button *{color:var(--k-text)!important;-webkit-text-fill-color:var(--k-text)!important;text-shadow:none!important}
+html body .user-dropdown button:hover,html body .user-dropdown button:hover *{color:var(--k-green)!important;-webkit-text-fill-color:var(--k-green)!important}
+html body .user-dropdown .logout-option,html body .user-dropdown .logout-option *{color:var(--k-neg)!important;-webkit-text-fill-color:var(--k-neg)!important}
+html body .user-dropdown .dropdown-divider{background:var(--k-rule2)!important;height:1px}
+html body .navsubmenu button,html body .navsubmenu button *{-webkit-text-fill-color:var(--k-text)!important;color:var(--k-text)!important}
+html body .navsubmenu button:hover,html body .navsubmenu button:hover *{-webkit-text-fill-color:var(--k-green)!important;color:var(--k-green)!important}
+
+/* ---------- page canvas ---------- */
+html body #appView,html body #appView .shell,html body #appView .content{background:var(--k-canvas)!important;background-image:none!important}
+html body #appView .shell{min-height:calc(100vh - 64px)}
+
+/* ---------- full-page views: back button, headings, avatars ---------- */
+html body .fullpage-modalbar .fullpage-back,html body .fullpage-modalbar .fullpage-back *{color:#fff!important;-webkit-text-fill-color:#fff!important}
+html body .modal h2,html body .modal h3{color:var(--k-ink)!important;-webkit-text-fill-color:var(--k-ink)!important}
+html body .modal .avatar{background:var(--k-green)!important;background-image:none!important;border:2px solid var(--k-brass)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;box-shadow:none!important}
+
+/* ---------- logo image, sidebar group labels, loan type chooser ---------- */
+html body .appbar .logo,html body .brand .logo{background:none!important;background-image:none!important;border:0!important;padding:0!important;overflow:hidden;font-size:0!important;box-shadow:none!important;width:42px!important;height:42px!important;border-radius:11px!important}
+html body .appbar .logo img,html body .sfg-hero-mark img{width:100%;height:100%;display:block;border-radius:inherit}
+html body .sfg-hero-mark{width:60px;height:60px;border:0;border-radius:15px;overflow:hidden;background:none}
+html body #appView .side .navgroup{color:#6F8179!important;-webkit-text-fill-color:#6F8179!important;opacity:1!important;font-weight:700!important}
+html body .modal .loan-type-choice{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;border-top:3px solid var(--k-brass)!important;border-radius:12px!important;box-shadow:none!important;color:var(--k-text)!important}
+html body .modal .loan-type-choice:nth-child(2){border-top-color:var(--k-green2)!important}
+html body .modal .loan-type-choice:hover{box-shadow:0 8px 22px rgba(14,42,36,.1)!important;border-color:var(--k-green2)!important}
+html body .modal .loan-type-choice .statlabel{text-transform:none!important;font:700 17px var(--f-display)!important;letter-spacing:-.01em!important;color:var(--k-ink)!important;-webkit-text-fill-color:var(--k-ink)!important}
+html body .modal .loan-type-choice .statlabel::first-letter{text-transform:none}
+html body .modal .loan-type-choice .muted{color:var(--k-muted)!important;-webkit-text-fill-color:var(--k-muted)!important;font-size:13.5px;margin-top:6px}
+@media(max-width:560px){html body .appbar .logo,html body .brand .logo{width:36px!important;height:36px!important}}
+
+/* ---------- v196: logo, readable nav labels, loan-type chooser ---------- */
+html body .appbar .logo,html body .brand .logo{width:42px!important;height:42px!important;min-width:42px;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;border-radius:11px!important;overflow:hidden}
+html body .logo::before,html body .logo::after{display:none!important}
+html body .logo img{width:100%;height:100%;display:block}
+html body .sfg-hero-mark{width:64px;height:64px;border:0;border-radius:16px;overflow:hidden;display:block}
+html body .sfg-hero-mark img{width:100%;height:100%;display:block}
+@media(max-width:560px){html body .appbar .logo,html body .brand .logo{width:36px!important;height:36px!important;min-width:36px}}
+html body #appView .side .navgroup,html body .side .navgroup{color:#6F8179!important;-webkit-text-fill-color:#6F8179!important;opacity:1!important;font:600 12px var(--f-body)!important}
+html body .loan-type-choice,html body button.card.statcard.loan-type-choice{background:#fff!important;background-image:none!important;border:1px solid var(--k-rule)!important;border-top:3px solid var(--k-brass)!important;border-radius:12px!important;box-shadow:none!important;color:var(--k-text)!important;min-height:130px;transition:border-color .15s,box-shadow .15s!important}
+html body .loan-type-choice+.loan-type-choice{border-top-color:var(--k-green2)!important}
+html body .loan-type-choice:hover{box-shadow:0 10px 26px rgba(14,42,36,.1)!important;border-color:var(--k-green2)!important}
+html body .loan-type-choice .statlabel{text-transform:none!important;font:700 19px var(--f-display)!important;color:var(--k-ink)!important;-webkit-text-fill-color:var(--k-ink)!important;letter-spacing:-.01em!important;margin-bottom:6px}
+html body .loan-type-choice .statlabel::first-letter{text-transform:none!important}
+html body .loan-type-choice .muted{color:var(--k-muted)!important;-webkit-text-fill-color:var(--k-muted)!important;font-size:13.5px!important}
+
+/* ---------- v196: legacy "dark theme" leftovers that made bold text near-white ---------- */
+html body .card b,html body .modal b,html body .content b,html body .muted b{color:inherit!important;-webkit-text-fill-color:currentColor!important}
+html body .card h2,html body .card h3,html body .card h4,html body .modal h2,html body .modal h3,html body .modal h4,html body .section-title{color:var(--k-ink)!important;-webkit-text-fill-color:var(--k-ink)!important}
+html body .modal label,html body .modal .field label{color:#2C413A!important;-webkit-text-fill-color:#2C413A!important}
+html body .sfg-graph-key b{color:var(--k-ink)!important;-webkit-text-fill-color:var(--k-ink)!important;font-family:var(--f-display)}
+html body .sfg-graph-key small{color:var(--k-muted)!important;-webkit-text-fill-color:var(--k-muted)!important}
+html body .sfg-graph-key{background:#F4F7F4!important;border:1px solid var(--k-rule2)!important;box-shadow:none!important}
+html body .btn,html body .btn *{-webkit-text-fill-color:currentColor!important}
+html body .badge,html body .badge *{-webkit-text-fill-color:currentColor!important}
+html body .fullpage-modalbar .fullpage-modalbrand b{color:#fff!important;-webkit-text-fill-color:#fff!important}
+html body .modal .btn,html body .modal .btn.primary,html body .modal .btn.danger,html body .content .btn.primary,html body .content .btn.danger{color:#fff!important}
+html body .modal .btn.soft,html body .content .btn.soft{color:var(--k-green)!important}
+html body #previousContributionModalRows td .btn.primary,html body #previousContributionModalRows td .btn.primary *,html body #previousContributionModalRows td .btn.danger,html body #previousContributionModalRows td .btn.danger *{color:#fff!important;-webkit-text-fill-color:#fff!important}
+html body #previousContributionModalRows td .btn.soft,html body #previousContributionModalRows td .btn.soft *{color:var(--k-green)!important;-webkit-text-fill-color:var(--k-green)!important}
+@media(max-width:430px){html body .brand b{font-size:14px!important}html body .user-menu-trigger .badge{display:none!important}}
+
+</style>
+<script id="sfg-backnav">
+/* Sharma Finance Group — phone/system Back button support.
+   Every in-app navigation (page change or full-page view) adds one history entry while the
+   person is tapping, so the system Back button retraces them one step at a time:
+   full-page view -> previous page -> ... -> Dashboard -> "press Back again to exit". */
+(function(){
+  if(window.__sfgNav)return; window.__sfgNav=true;
+  try{
+  var PAGES=["dashboard","members","contributionHub","loanHub","contributions","loans","calculators","repayments","ledger","reports","settings"];
+  var depth=0, inflight=0, ignore=0, queue=[], modalOpen=false, lastPage=null, replaying=false, exitArmed=false, exitTimer=null;
+  var _show=window.showPage, _open=window.openModal, _close=window.closeModal;
+  if(typeof _show!=="function"||typeof _open!=="function"||typeof _close!=="function")return;
+  function el(id){return document.getElementById(id)}
+  function appVisible(){var a=el("appView");return !!a&&!a.classList.contains("hidden")}
+  function curPage(){for(var i=0;i<PAGES.length;i++){var p=el(PAGES[i]+"Page");if(p&&!p.classList.contains("hidden"))return PAGES[i]}return "dashboard"}
+  function doPush(entry){try{entry.sfg=1;entry.i=depth+1;history.pushState(entry,"");depth++;return true}catch(e){return false}}
+  function push(entry){if(inflight>0){queue.push(entry);return}doPush(entry)}
+  function flush(){var q=queue;queue=[];for(var i=0;i<q.length;i++)doPush(q[i])}
+  function back(){if(depth<=0)return;try{inflight++;depth--;history.back()}catch(e){inflight=Math.max(0,inflight-1)}}
+  function toast(msg){
+    var t=el("sfgBackToast");
+    if(!t){t=document.createElement("div");t.id="sfgBackToast";t.setAttribute("role","status");
+      t.style.cssText="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#0F4A3D;color:#fff;padding:11px 18px;border-radius:10px;font:600 13px system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.25);border:1px solid #B8862B;z-index:100000;max-width:calc(100vw - 32px);text-align:center;opacity:0;transition:opacity .2s;pointer-events:none";
+      document.body.appendChild(t)}
+    t.textContent=msg;t.style.opacity="1";clearTimeout(t._h);t._h=setTimeout(function(){t.style.opacity="0"},2300);
+  }
+  function overlayOpen(){
+    var g=["contributionNavGroup","loanNavGroup"];
+    for(var i=0;i<g.length;i++){var n=el(g[i]);if(n&&n.classList.contains("open"))return true}
+    var dd=el("userDropdown");return !!dd&&!dd.classList.contains("hidden");
+  }
+  function closeOverlays(){
+    [["contributionNavGroup"],["loanNavGroup"]].forEach(function(a){var n=el(a[0]);if(n&&n.classList.contains("open")){try{window.closeNavSubmenu(n)}catch(e){n.classList.remove("open")}}});
+    var dd=el("userDropdown");if(dd&&!dd.classList.contains("hidden")){try{window.closeUserMenu()}catch(e){dd.classList.add("hidden")}}
+  }
+  function goPage(p){replaying=true;try{_show.call(window,p)}catch(e){}replaying=false;lastPage=p}
+  function armApp(){
+    if(depth===0){lastPage=curPage();doPush({kind:"page",page:lastPage})}
+  }
+
+  window.showPage=function(page){
+    var r=_show.apply(this,arguments);
+    try{var after=curPage();if(!replaying&&appVisible()&&!modalOpen&&after!==lastPage){lastPage=after;push({kind:"page",page:after})}}catch(e){}
+    return r;
+  };
+  window.openModal=function(){
+    var r=_open.apply(this,arguments);
+    try{if(appVisible()&&!modalOpen){modalOpen=true;push({kind:"modal"})}}catch(e){}
+    return r;
+  };
+  window.closeModal=function(){
+    var r=_close.apply(this,arguments);
+    try{
+      if(modalOpen){
+        modalOpen=false;
+        var qi=-1;for(var i=0;i<queue.length;i++){if(queue[i].kind==="modal"){qi=i;break}}
+        if(qi>=0)queue.splice(qi,1);else back();
+        var now=curPage();if(now!==lastPage){lastPage=now;push({kind:"page",page:now})}
+      }
+    }catch(e){}
+    return r;
+  };
+
+  window.addEventListener("popstate",function(ev){
+    var st=ev.state,mine=st&&st.sfg;
+    depth=mine?st.i:0;
+    if(ignore>0){ignore--;return}
+    if(inflight>0){inflight--;if(inflight===0)flush();return}
+    if(!appVisible())return;
+    if(overlayOpen()){            /* close menus first, stay where we were */
+      closeOverlays();ignore++;try{history.forward()}catch(e){ignore--}return;
+    }
+    if(modalOpen){                /* system Back on a full-page view closes it */
+      modalOpen=false;try{_close.call(window)}catch(e){}
+      var p0=mine&&st.kind==="page"?st.page:curPage();
+      if(p0!==curPage())goPage(p0);else lastPage=p0;
+      return;
+    }
+    if(mine&&st.kind==="modal"){ignore++;try{history.back()}catch(e){ignore--}return}
+    if(mine&&st.kind==="page"){if(st.page!==curPage())goPage(st.page);else lastPage=st.page;return}
+    /* reached the entry below the app: go to Dashboard first, then offer to exit */
+    if(curPage()!=="dashboard"){goPage("dashboard");doPush({kind:"page",page:"dashboard"});return}
+    if(exitArmed){clearTimeout(exitTimer);exitArmed=false;try{history.back()}catch(e){}return}
+    exitArmed=true;toast("बाहर निकलने के लिए एक बार और Back दबाएँ");
+    doPush({kind:"page",page:"dashboard"});
+    clearTimeout(exitTimer);exitTimer=setTimeout(function(){exitArmed=false},2400);
+  });
+
+  var av=el("appView");
+  if(av&&window.MutationObserver){
+    new MutationObserver(function(){
+      if(appVisible()){armApp()}
+      else{
+        modalOpen=false;queue=[];exitArmed=false;lastPage=null;
+        if(depth>0){ignore++;try{history.go(-depth)}catch(e){ignore--}depth=0}
+      }
+    }).observe(av,{attributes:true,attributeFilter:["class"]});
+  }
+  if(appVisible())armApp();
+  }catch(e){}
+})();
+
 </script>
 </body>
 

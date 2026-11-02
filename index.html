@@ -429,7 +429,7 @@ input,select,textarea,.search,.field input,.field select{background:#f9fcff!impo
       <button class="btn primary full" onclick="login()" id="loginBtn">Admin Login</button>
       <div class="toolbar" style="margin-top:10px"><button class="btn soft small" onclick="changeConnection()">Change Connection</button></div>
       <div id="loginMsg" class="statusline"></div>
-      <div style="text-align:center;margin-top:12px"><button type="button" class="btn soft small" onclick="openTermsModal()">📜 नियम एवं शर्तें देखें</button><div class="muted" style="margin-top:8px;font-size:11px">Version: 2 Nov 2026 · v6</div></div>
+      <div style="text-align:center;margin-top:12px"><button type="button" class="btn soft small" onclick="openTermsModal()">📜 नियम एवं शर्तें देखें</button><div class="muted" style="margin-top:8px;font-size:11px">Version: 2 Nov 2026 · v10</div></div>
     </div>
   </div>
 </div>
@@ -470,7 +470,7 @@ input,select,textarea,.search,.field input,.field select{background:#f9fcff!impo
     <div class="wow-balance-card">
       <div class="wow-kicker2">SHARMA FINANCE GROUP · LIVE POSITION</div>
       <div class="wow-balance2" id="wowBalance">₹0</div>
-      <div class="wow-caption">Current available balance · Contribution + fine + interest received − outstanding principal</div>
+      <div class="wow-caption">Current available balance · Contribution + Fine + Interest − Misc Expense − Active Loan का बकाया Principal</div>
       <div class="wow-chiprow"><span class="wow-chip" onclick="openDashboardMetric('totalContribution')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openDashboardMetric('totalContribution')"><i></i> Contribution <b id="wowContrib">₹0</b></span><span class="wow-chip" onclick="openDashboardMetric('fines')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openDashboardMetric('fines')"><i style="background:#fbbf24;box-shadow:0 0 12px #fbbf24"></i> All Fines <b id="wowFine">₹0</b></span><span class="wow-chip" onclick="openDashboardMetric('interestCollected')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')openDashboardMetric('interestCollected')"><i style="background:#a78bfa;box-shadow:0 0 12px #a78bfa"></i> Interest <b id="wowInterest">₹0</b></span><span class="wow-chip"><i style="background:#60a5fa;box-shadow:0 0 12px #60a5fa"></i> Members <b id="wowMembers">0</b></span></div>
     </div>
     <div class="wow-side">
@@ -723,8 +723,13 @@ function legacyCashIssued(){return cache.loans.reduce((total,l)=>total+loanCashA
 function availableBalance(){
   // Single source of truth: LIVE POSITION is the all-time net cash of the same
   // categorized transaction rows shown in Ledger. No separate formula can drift.
-  const rows=ledgerData(true);
-  return rows.reduce((balance,row)=>balance+Number(row.incoming||0)-Number(row.outgoing||0),0);
+  const b=sfgPositionParts();
+  return b.ledgerCash;
+}
+function sfgPositionParts(){
+  const rows=ledgerData(true),sum=(t,k)=>rows.filter(x=>x.type===t).reduce((a,x)=>a+Number(x[k]||0),0);
+  const out=cache.loans.filter(l=>!isMerged(l)&&loanStats(l).outstanding>0.01).reduce((a,l)=>a+Number(loanStats(l).principalOutstanding||0),0);
+  return{con:sum('Contribution','incoming'),fine:sum('Contribution Fine','incoming')+sum('Interest Fine','incoming'),int:sum('Total Interest','incoming'),exp:sum('Misc Expense','outgoing'),out,ledgerCash:rows.reduce((a,x)=>a+Number(x.incoming||0)-Number(x.outgoing||0),0)};
 }
 
 function sfgPdfBlobUrl(){try{const bin=atob(window.SFG_RULE_PDF_B64||''),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return URL.createObjectURL(new Blob([arr],{type:'application/pdf'}))}catch(e){return ''}}
@@ -3115,6 +3120,23 @@ const m={name:"Sharma Finance",short_name:"Sharma Finance",description:"Sharma F
 const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));document.head.appendChild(l);
 let dp;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;window.sfgInstallApp=()=>dp.prompt()});
 }catch(e){}})();
+</script>
+<script id="sfg-v7">
+(function(){
+const r0=window.renderWowDashboard;
+function breakdown(){
+  const el=document.getElementById('wowBalance');if(!el)return;
+  const q=sfgPositionParts(),bal=availableBalance(),m=n=>money(Math.abs(n)),oth=Math.round((bal-(q.con+q.fine+q.int-q.out-q.exp))*100)/100;
+  const row=(a,v,c)=>'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line,#e2e8f0)"><span>'+a+'</span><b style="color:'+c+'">'+m(v)+'</b></div>';
+  let c=el;while(c.parentElement&&!/Page$/.test(c.parentElement.id||''))c=c.parentElement;
+  let box=document.getElementById('sfgBreakdown');if(!box){box=document.createElement('div');box.id='sfgBreakdown';box.className='card';box.style.marginTop='14px';c.insertAdjacentElement('afterend',box)}
+  const chips=el.closest('[class*=wow]')?.parentElement?.querySelector('.wow-chiprow')||document.querySelector('.wow-chiprow');
+  if(chips){let ch=document.getElementById('wowMiscChip');if(!ch){ch=document.createElement('span');ch.id='wowMiscChip';ch.className='wow-chip';ch.setAttribute('role','button');ch.onclick=function(){showPage('ledger');const t=document.getElementById('ledgerType');if(t){t.value='Misc Expense';try{renderLedger()}catch(e){}}};chips.appendChild(ch)}ch.innerHTML='<i style="background:#f87171;box-shadow:0 0 12px #f87171"></i> Misc Expenses <b>'+money(q.exp)+'</b>'}
+  box.innerHTML='<h3 style="margin:0 0 6px">🧮 Live Position का हिसाब</h3>'+row('＋ Contribution',q.con,'#16a34a')+row('＋ सभी Fine',q.fine,'#16a34a')+row('＋ Interest मिला',q.int,'#16a34a')+row('－ Misc Expense (कुल)',q.exp,'#dc2626')+row('－ Active Loan का बकाया Principal',q.out,'#dc2626')+(Math.abs(oth)>0.5?row('± अन्य समायोजन (Loan cash / Principal का फ़र्क)',oth,oth<0?'#dc2626':'#16a34a'):'')+'<div style="display:flex;justify-content:space-between;padding:9px 0;font-size:16px"><b>= Live Position</b><b>'+money(bal)+'</b></div>'
+   ;
+}
+window.renderWowDashboard=function(){const r=r0.apply(this,arguments);try{breakdown()}catch(e){console.error(e)}return r};
+})();
 </script>
 </body>
 

@@ -429,7 +429,7 @@ input,select,textarea,.search,.field input,.field select{background:#f9fcff!impo
       <button class="btn primary full" onclick="login()" id="loginBtn">Admin Login</button>
       <div class="toolbar" style="margin-top:10px"><button class="btn soft small" onclick="changeConnection()">Change Connection</button></div>
       <div id="loginMsg" class="statusline"></div>
-      <div style="text-align:center;margin-top:12px"><button type="button" class="btn soft small" onclick="openTermsModal()">📜 नियम एवं शर्तें देखें</button><div class="muted" style="margin-top:8px;font-size:11px">Version: 2 Nov 2026 · v15</div></div>
+      <div style="text-align:center;margin-top:12px"><button type="button" class="btn soft small" onclick="openTermsModal()">📜 नियम एवं शर्तें देखें</button><div class="muted" style="margin-top:8px;font-size:11px">Version: 2 Nov 2026 · v16</div></div>
     </div>
   </div>
 </div>
@@ -838,7 +838,10 @@ window.login=async()=>{
       }
       if(!data.member){showLoginError('Member login response incomplete hai. Member record nahi mila.');return;}
       currentUser=null;currentRole='member';currentMemberId=data.member.id;isAdmin=false;memberLocalSession=true;memberSession=data;localStorage.setItem('sfg_member_session',JSON.stringify({memberId:data.member.id,name:data.member.name||'',loginAt:Date.now()}));try{sessionStorage.setItem('sfg_member_snapshot',JSON.stringify({data,identifier,ts:Date.now()}))}catch(e){}
-      cache={members:Array.isArray(data.members)?data.members:[],contributions:data.contributions||[],loans:data.loans||[],repayments:data.repayments||[]};groupSummary=data.group_summary||null;sfgLoginPhone=identifier;openApp(null);return;
+      let sfgEx=Array.isArray(data.expenses)?data.expenses:[];
+      if(!sfgEx.length){try{const rx=await sb.rpc('member_expenses',{p_phone:identifier,p_password:password});if(!rx.error&&Array.isArray(rx.data))sfgEx=rx.data}catch(e){}}
+      try{const sn=JSON.parse(sessionStorage.getItem('sfg_member_snapshot')||'null');if(sn&&sn.data){sn.data.expenses=sfgEx;sessionStorage.setItem('sfg_member_snapshot',JSON.stringify(sn))}}catch(e){}
+      cache={members:Array.isArray(data.members)?data.members:[],contributions:data.contributions||[],loans:data.loans||[],repayments:data.repayments||[],expenses:sfgEx};groupSummary=data.group_summary||null;sfgLoginPhone=identifier;openApp(null);return;
     }catch(e){
       console.error('member_login unexpected error',e);
       showLoginError('Member login mein unexpected error aaya.',e?.message||String(e));
@@ -886,7 +889,7 @@ async function init(){
     const {data:sessionData}=await sb.auth.getSession();
     const sfgLastAct=Number(localStorage.getItem('sfg_last_active')||0),sfgIdleExpired=!!(sfgLastAct&&Date.now()-sfgLastAct>=SFG_IDLE_MS);if(sfgIdleExpired&&sessionData?.session){try{await sb.auth.signOut()}catch(e){}}if(!sfgIdleExpired&&sessionData?.session?.user){const role=await loadRole(sessionData.session.user);if(role?.role==='admin'){currentUser=sessionData.session.user;currentRole='admin';currentMemberId=null;isAdmin=true;memberLocalSession=false;await openApp(sessionData.session.user);return;}}
     const savedMember=JSON.parse(localStorage.getItem('sfg_member_session')||'null');
-    try{const snap=JSON.parse(sessionStorage.getItem('sfg_member_snapshot')||'null');const lastA=Number(localStorage.getItem('sfg_last_active')||0);if(snap&&snap.data&&snap.data.member&&!sfgIdleExpired&&lastA&&Date.now()-lastA<SFG_IDLE_MS){const d0=snap.data;currentUser=null;currentRole='member';currentMemberId=d0.member.id;isAdmin=false;memberLocalSession=true;memberSession=d0;cache={members:Array.isArray(d0.members)?d0.members:[],contributions:d0.contributions||[],loans:d0.loans||[],repayments:d0.repayments||[]};groupSummary=d0.group_summary||null;sfgLoginPhone=snap.identifier||'';await openApp(null);return;}else{sessionStorage.removeItem('sfg_member_snapshot')}}catch(e){try{sessionStorage.removeItem('sfg_member_snapshot')}catch(e2){}}
+    try{const snap=JSON.parse(sessionStorage.getItem('sfg_member_snapshot')||'null');const lastA=Number(localStorage.getItem('sfg_last_active')||0);if(snap&&snap.data&&snap.data.member&&!sfgIdleExpired&&lastA&&Date.now()-lastA<SFG_IDLE_MS){const d0=snap.data;currentUser=null;currentRole='member';currentMemberId=d0.member.id;isAdmin=false;memberLocalSession=true;memberSession=d0;cache={members:Array.isArray(d0.members)?d0.members:[],contributions:d0.contributions||[],loans:d0.loans||[],repayments:d0.repayments||[],expenses:d0.expenses||[]};groupSummary=d0.group_summary||null;sfgLoginPhone=snap.identifier||'';await openApp(null);return;}else{sessionStorage.removeItem('sfg_member_snapshot')}}catch(e){try{sessionStorage.removeItem('sfg_member_snapshot')}catch(e2){}}
     if(savedMember?.memberId){localStorage.removeItem('sfg_member_session');}
     $("setupBox").classList.add("hidden");
     $("loginBox").classList.remove("hidden");

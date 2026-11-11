@@ -429,7 +429,7 @@ input,select,textarea,.search,.field input,.field select{background:#f9fcff!impo
       <button class="btn primary full" onclick="login()" id="loginBtn">Admin Login</button>
       <div class="toolbar" style="margin-top:10px"><button class="btn soft small" onclick="changeConnection()">Change Connection</button></div>
       <div id="loginMsg" class="statusline"></div>
-      <div style="text-align:center;margin-top:12px"><button type="button" class="btn soft small" onclick="openTermsModal()">📜 नियम एवं शर्तें देखें</button><div class="muted" style="margin-top:8px;font-size:11px">Version: 2 Nov 2026 · v16</div></div>
+      <div style="text-align:center;margin-top:12px"><button type="button" class="btn soft small" onclick="openTermsModal()">📜 नियम एवं शर्तें देखें</button><div class="muted" style="margin-top:8px;font-size:11px">Version: 2 Nov 2026 · v18</div></div>
     </div>
   </div>
 </div>
@@ -496,7 +496,7 @@ input,select,textarea,.search,.field input,.field select{background:#f9fcff!impo
 <div class="grid2" style="margin-top:16px"><div class="card"><div class="toprow"><div><h3 style="margin:0">Monthly Collection Trend</h3><div class="muted">Contribution + fine + interest received · last 6 months</div></div><span class="badge blue">6 months</span></div><div id="dashboardCollectionTrend"><div class="empty">Loading collection trend…</div></div></div><div class="card"><div class="toprow"><div><h3 style="margin:0">Overdue EMI Watchlist</h3><div class="muted">Installments past due date and not recorded as paid</div></div><button class="btn primary small admin-only" onclick="openEMIRepaymentModal()">Collect EMI</button></div><div id="dashboardOverdueEMI"><div class="empty">Checking overdue installments…</div></div></div></div>
 <div class="grid2 sfg-analytics-row" style="margin-top:16px"><div class="card sfg-graph-card"><div class="toprow"><div><h3 style="margin:0">Income Composition</h3><div class="muted">Contribution, fines and interest collected</div></div><span class="badge green">Fund Inflow</span></div><div id="financeMixGraph"><div class="empty">Loading finance graph…</div></div></div><div class="card sfg-graph-card"><div class="toprow"><div><h3 style="margin:0">Loan Portfolio</h3><div class="muted">Principal distributed, repaid and still outstanding</div></div><span class="badge blue">Loan Overview</span></div><div id="loanPortfolioGraph"><div class="empty">Loading loan graph…</div></div></div></div>
 </section>
-<section id="membersPage" class="hidden"><div class="notice" style="margin-bottom:12px" id="memberViewNotice">Member login में सभी members की details view-only दिखाई देंगी. Admin सभी members देख और edit कर सकता है.</div><div class="toprow"><div><h1>Members</h1><div class="notice" style="margin-top:10px">👁️ Member Login में सभी members की details view-only हैं. Add/Edit/Delete केवल Admin कर सकता है.</div><div class="muted">Click a member to open complete account history</div></div><button class="btn primary admin-only" onclick="openMemberModal()">+ Add Member</button></div><div class="card"><div class="toolbar"><input id="memberSearch" class="search" placeholder="Search name or phone..." oninput="renderMembers()"><label class="toggle"><input id="showInactive" type="checkbox" onchange="renderMembers()"> Show inactive</label></div><div id="memberList" class="membergrid"></div></div></section>
+<section id="membersPage" class="hidden"><div class="notice" style="margin-bottom:12px" id="memberViewNotice">Member login में सभी members की details view-only दिखाई देंगी. Admin सभी members देख और edit कर सकता है.</div><div class="toprow"><div><h1>Members</h1><div class="notice" style="margin-top:10px">👁️ Member Login में सभी members की details view-only हैं. Add/Edit/Delete केवल Admin कर सकता है.</div><div class="muted">Click a member to open complete account history</div></div><button class="btn primary admin-only" onclick="openMemberModal()">+ Add Member</button><button class="btn soft admin-only" onclick="sfgBulkPasswords()">🔑 सभी Login पासवर्ड सेट करें</button></div><div class="card"><div class="toolbar"><input id="memberSearch" class="search" placeholder="Search name or phone..." oninput="renderMembers()"><label class="toggle"><input id="showInactive" type="checkbox" onchange="renderMembers()"> Show inactive</label></div><div id="memberList" class="membergrid"></div></div></section>
 <section id="contributionHubPage" class="hidden">
 <div class="toprow"><div><h1>💰 Contributions Center</h1><div class="muted">Monthly contribution management — choose what you want to do</div></div><button class="btn soft" onclick="showPage('dashboard')">← Dashboard</button></div>
 <div class="navhub-grid">
@@ -643,7 +643,7 @@ input,select,textarea,.search,.field input,.field select{background:#f9fcff!impo
 <script>
 const createClient = (window.supabase && window.supabase.createClient) ? window.supabase.createClient : null;
 let sb=null,cache={members:[],contributions:[],loans:[],repayments:[],expenses:[]};
-const SFG_RULE7_FROM='2026-11-06';const SFG_IDLE_MS=10*60*1000;let sfgLastActive=Date.now(),sfgLastWrite=0,sfgLoginPhone='';
+const SFG_RULE7_FROM='1970-01-01';const SFG_IDLE_MS=10*60*1000;let sfgLastActive=Date.now(),sfgLastWrite=0,sfgLoginPhone='';
 const $=id=>document.getElementById(id),money=n=>"₹"+Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2});
 function localDate(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
 const today=()=>localDate(),monthNow=()=>localDate().slice(0,7);
@@ -1196,7 +1196,7 @@ const MEMBER_PHOTO_KEY='sfg_member_photos_v1';
 function memberPhoto(id){try{return JSON.parse(localStorage.getItem(MEMBER_PHOTO_KEY)||'{}')[id]||''}catch(e){return ''}}
 function previewMemberPhoto(input){const f=input.files&&input.files[0];if(!f)return;if(!f.type.startsWith('image/')){alert('Image file select karein.');input.value='';return}if(f.size>3*1024*1024){alert('Photo 3 MB se chhota select karein.');input.value='';return}const reader=new FileReader();reader.onload=()=>{const img=document.getElementById('mPhotoPreview');if(img){img.src=reader.result;img.style.display='block'}const hidden=document.getElementById('mPhotoData');if(hidden)hidden.value=reader.result};reader.readAsDataURL(f)}
 function openMemberModal(id){if(!requireAdmin())return;const m=id?cache.members.find(x=>x.id===id):null;const photo=memberPhoto(id||'');openModal(`<div class="modalhead"><div><h2 style="margin:0">${m?'Edit Member':'Add Member'}</h2><div class="muted">Member basic details</div></div><button class="close" onclick="closeModal()">×</button></div><div class="formgrid" style="margin-top:18px"><div class="field"><label>Name</label><input id="mName" value="${esc(m?.name||'')}"></div><div class="field"><label>Phone</label><input id="mPhone" value="${esc(m?.phone||'')}"></div><div class="field"><label>Status</label><select id="mActive"><option value="true" ${m?.active!==false?'selected':''}>Active</option><option value="false" ${m?.active===false?'selected':''}>Inactive</option></select></div><div class="field"><label>Member Photo (from this device)</label><input type="file" accept="image/*" onchange="previewMemberPhoto(this)"><input id="mPhotoData" type="hidden" value=""><img id="mPhotoPreview" alt="Photo preview" src="${photo}" class="passport-photo" style="${photo?'':'display:none;'}margin-top:8px"><div class="muted">Photo किसी भी आकार की हो, प्रोफाइल पर passport-size (70 × 90) में दिखेगी. Max 3 MB; photo इस browser/device में store होती है.</div><button type="button" class="btn soft small" onclick="clearMemberPhoto()">Remove Photo</button></div></div><div class="formactions"><button class="btn primary" onclick="saveMember('${id||''}')">Save Member</button><button class="btn soft" onclick="closeModal()">Cancel</button></div>`);$('mPhotoData').value=photo}function clearMemberPhoto(){const h=$('mPhotoData'),img=$('mPhotoPreview');if(h)h.value='';if(img){img.src='';img.style.display='none'}}window.openMemberModal=openMemberModal;
-window.saveMember=async id=>{if(!requireAdmin())return;const name=$("mName").value.trim(),phone=$("mPhone").value.trim()||null,active=$("mActive").value==="true";if(!name)return alert("Name required");const q=id?sb.from("members").update({name,phone,active}).eq("id",id):sb.from("members").insert({name,phone,active}).select('id').single();const{data,error}=await q;if(error){alert(error.message);return}const memberId=id||data?.id;try{const photos=JSON.parse(localStorage.getItem(MEMBER_PHOTO_KEY)||'{}'),photo=$('mPhotoData')?.value||'';if(photo)photos[memberId]=photo;else delete photos[memberId];localStorage.setItem(MEMBER_PHOTO_KEY,JSON.stringify(photos))}catch(e){alert('Member saved, but photo could not be stored. Browser storage may be full.')}closeModal();await refresh()};
+window.saveMember=async id=>{if(!requireAdmin())return;const name=$("mName").value.trim(),phone=$("mPhone").value.trim()||null,active=$("mActive").value==="true";if(!name)return alert("Name required");const q=id?sb.from("members").update({name,phone,active}).eq("id",id):sb.from("members").insert({name,phone,active}).select('id').single();const{data,error}=await q;if(error){alert(error.message);return}const memberId=id||data?.id;if(!id&&memberId&&phone){try{const pw=sfgDefaultPw(phone,cache.members||[],memberId);if(pw){const rp=await sb.rpc('admin_set_member_password',{p_member_id:memberId,p_password:pw});if(!rp.error)alert('Login password set: '+pw+' (default = mobile number)')}}catch(e){console.warn(e)}}try{const photos=JSON.parse(localStorage.getItem(MEMBER_PHOTO_KEY)||'{}'),photo=$('mPhotoData')?.value||'';if(photo)photos[memberId]=photo;else delete photos[memberId];localStorage.setItem(MEMBER_PHOTO_KEY,JSON.stringify(photos))}catch(e){alert('Member saved, but photo could not be stored. Browser storage may be full.')}closeModal();await refresh()};
 window.toggleMember=async id=>{if(!requireAdmin())return;const m=cache.members.find(x=>x.id===id);if(!m)return;if(m.active&&!confirm(`${m.name} ko inactive karna hai? History safe rahegi.`))return;const{error}=await sb.from("members").update({active:!m.active}).eq("id",id);if(error)alert(error.message);else await refresh()};
 window.permanentlyDeleteMember=async function(id){if(!requireAdmin())return;const m=cache.members.find(x=>x.id===id);if(!m)return;const loans=cache.loans.filter(l=>l.member_id===id);const loanIds=loans.map(l=>l.id);const repCount=cache.repayments.filter(r=>loanIds.includes(r.loan_id)).length;const contribCount=cache.contributions.filter(c=>c.member_id===id).length;const ok=confirm(`PERMANENT DELETE MEMBER: ${m.name}\n\nThis permanently deletes this member and their ${contribCount} contribution record(s), ${loans.length} loan record(s), and ${repCount} repayment record(s). This cannot be undone.\n\nContinue?`);if(!ok)return;try{if(loanIds.length){const rr=await sb.from('repayments').delete().in('loan_id',loanIds);if(rr.error)throw rr.error;const ll=await sb.from('loans').delete().eq('member_id',id);if(ll.error)throw ll.error;}const cc=await sb.from('contributions').delete().eq('member_id',id);if(cc.error)throw cc.error;const mm=await sb.from('members').delete().eq('id',id);if(mm.error)throw mm.error;try{const photos=JSON.parse(localStorage.getItem(MEMBER_PHOTO_KEY)||'{}');delete photos[id];localStorage.setItem(MEMBER_PHOTO_KEY,JSON.stringify(photos));}catch(e){}closeModal();await refresh();alert('Member aur uske related records permanently delete ho gaye.');}catch(e){alert('Permanent delete poora nahi hua: '+(e.message||e)+'\nKuch records delete ho chuke ho sakte hain; refresh karke check karein.');await refresh();}};
 function memberOptions(all=false){let a=all?['<option value="__ALL__">👥 All Active Members</option>']:[];cache.members.filter(m=>m.active).forEach(m=>a.push(`<option value="${m.id}">${esc(m.name)}</option>`));return a.join("")}
@@ -2714,6 +2714,7 @@ function openMore(){
   if(adm)it.push(['⚙️','Settings',"showPage('settings')"]);else it.push(['🧾','My Passbook',"sfgPassbookPDF(currentMemberId)"]);
   it.push(['🌙','<span data-theme-label></span>',"sfgToggleTheme()"]);
   it.push(['↪','Logout',"logout()"]);
+  if(adm&&window.sfgUndoCount&&window.sfgUndoCount())it.unshift(['↩','Undo Delete ('+window.sfgUndoLabel()+')',"sfgUndoDelete()"]);
   s.innerHTML='<div class="sheet"><div class="grab"></div><div class="grid">'+it.map(i=>'<button type="button" onclick="document.getElementById(\'sfgMore\').classList.remove(\'on\');'+i[2]+'"><i>'+i[0]+'</i><span>'+i[1]+'</span></button>').join('')+'</div></div>';
   setTheme(curTheme());requestAnimationFrame(()=>s.classList.add('on'));
 }
@@ -3014,15 +3015,6 @@ window.sfgLedgerExport=function(kind){
     window.open(URL.createObjectURL(new Blob([html],{type:'text/html'})),'_blank');
   }
 };
-/* backup: phone share-sheet fallback */
-const ob=window.sfgBackup;
-window.sfgBackup=async function(){
-  const d={app:'sharma-finance',ts:Date.now(),data:{}};['members','contributions','loans','repayments','expenses'].forEach(k=>d.data[k]=cache[k]||[]);
-  const f=new File([JSON.stringify(d)],'sharma_finance_backup_'+new Date().toISOString().slice(0,10)+'.json',{type:'application/json'});
-  localStorage.setItem('sfg_last_backup',String(Date.now()));
-  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'Sharma Finance Backup'});return}catch(e){if(e&&e.name==='AbortError')return}}
-  const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();toast('💾 बैकअप डाउनलोड हो गया');
-};
 })();
 </script>
 <script id="sfg-pwa">
@@ -3164,6 +3156,78 @@ document.addEventListener('click',e=>{
 .sfg-terms tr.sfg-off td:nth-child(4){color:#dc2626!important;font-weight:800}
 .sfg-terms .btn{color:#0f172a!important}.sfg-terms .btn.primary{color:#fff!important;background:#0f766e!important}
 </style>
+<script id="sfg-v17">
+/* v17: default member login password = registered mobile number (duplicates get #2, #3 ...) */
+function sfgDefaultPw(phone,members,selfId){
+  const d=String(phone||'').replace(/\D/g,'').slice(-10);if(d.length<4)return '';
+  const same=(members||[]).filter(m=>m.id!==selfId&&String(m.phone||'').replace(/\D/g,'').slice(-10)===d).length;
+  return same===0?d:d+'#'+(same+1);
+}
+window.sfgBulkPasswords=async function(){
+  if(!requireAdmin())return;
+  const ms=(cache.members||[]).filter(m=>m.active!==false);
+  if(!confirm('सभी '+ms.length+' active सदस्यों का Login पासवर्ड default (उनका मोबाइल नंबर) पर सेट होगा.\n\n⚠ जिस सदस्य ने पहले से अपना अलग पासवर्ड रखा है, वह भी इसी से बदल जाएगा.\n\nआगे बढ़ें?'))return;
+  const seen={},rows=[];let ok=0,fail=0;
+  toast('⏳ पासवर्ड सेट हो रहे हैं...');
+  for(const m of ms){
+    const d=String(m.phone||'').replace(/\D/g,'').slice(-10);
+    if(d.length<4){rows.push([m.name,m.phone||'—','मोबाइल नंबर नहीं है',false]);fail++;continue}
+    seen[d]=(seen[d]||0)+1;const pw=seen[d]===1?d:d+'#'+seen[d];
+    const r=await sb.rpc('admin_set_member_password',{p_member_id:m.id,p_password:pw});
+    if(r.error){rows.push([m.name,m.phone,r.error.message,false]);fail++}else{rows.push([m.name,m.phone,pw,true]);ok++}
+  }
+  window.__sfgPwRows=rows;
+  openModal('<div class="modalhead"><h2 style="margin:0">🔑 Login पासवर्ड रिपोर्ट</h2><button class="close" onclick="closeModal()">×</button></div><p>✅ सेट हुए: <b>'+ok+'</b> &nbsp; ❌ नहीं हुए: <b>'+fail+'</b></p><p class="muted">Login = Registered Mobile Number + Password. समान नंबर वाले सदस्यों के पासवर्ड में #2, #3 जुड़ा है.</p><div style="overflow-x:auto"><table class="sfg-keep" style="width:100%;border-collapse:collapse"><thead><tr><th>नाम</th><th>मोबाइल</th><th>पासवर्ड</th></tr></thead><tbody>'+rows.map(r=>'<tr><td style="border:1px solid #ccc;padding:5px">'+r[0]+'</td><td style="border:1px solid #ccc;padding:5px">'+r[1]+'</td><td style="border:1px solid #ccc;padding:5px;color:'+(r[3]?'inherit':'#b91c1c')+'">'+r[2]+'</td></tr>').join('')+'</tbody></table></div><div style="margin-top:12px"><button class="btn primary" onclick="sfgPwCsv()">⬇ CSV डाउनलोड</button></div>');
+};
+window.sfgPwCsv=function(){const t='\ufeffनाम,मोबाइल,पासवर्ड\n'+(window.__sfgPwRows||[]).map(r=>r.slice(0,3).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download='member_login_passwords.csv';a.click()};
+</script>
+<script id="sfg-v18">
+/* v18: Undo for deleted entries (contribution, loan, repayment, expense, member). Snapshots rows just before any Supabase delete. */
+(function(){
+const KEY='sfg_undo_stack',LS=localStorage;let stack=[];try{stack=JSON.parse(LS.getItem(KEY)||'[]')}catch(e){}
+const save=()=>{try{LS.setItem(KEY,JSON.stringify(stack.slice(-3)))}catch(e){try{LS.removeItem(KEY)}catch(_){}}};
+const NAME={contributions:'Contribution',loans:'Loan',repayments:'Repayment',misc_expenses:'Expense',members:'Member'};
+window.sfgUndoCount=()=>stack.length;
+window.sfgUndoLabel=()=>{const g=stack[stack.length-1];return g?g.items.map(i=>(NAME[i.table]||i.table)+' x'+i.rows.length).join(', '):''};
+let sn;function snack(){
+  let el=document.getElementById('sfgUndoSnack');if(!stack.length){el&&el.remove();return}
+  if(!el){el=document.createElement('div');el.id='sfgUndoSnack';el.style.cssText='position:fixed;left:12px;right:12px;bottom:84px;z-index:10000;background:#0f172a;color:#fff;border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:center;justify-content:space-between;box-shadow:0 10px 30px rgba(0,0,0,.35);font-weight:700';document.body.appendChild(el)}
+  el.innerHTML='<span>🗑 Delete हुआ: '+sfgUndoLabel()+'</span><button style="background:#fbbf24;color:#111;border:0;border-radius:10px;padding:9px 14px;font-weight:900" onclick="sfgUndoDelete()">↩ UNDO</button>';
+  clearTimeout(sn);sn=setTimeout(()=>{const x=document.getElementById('sfgUndoSnack');x&&x.remove()},12000);
+}
+function push(table,rows){const now=Date.now();let g=stack[stack.length-1];if(!g||now-g.t>4000){g={t:now,items:[]};stack.push(g)}g.t=now;g.items.push({table,rows});save();setTimeout(snack,500)}
+window.sfgUndoDelete=async function(){
+  const g=stack[stack.length-1];if(!g)return toast('Undo के लिए कुछ नहीं है');
+  if(typeof isAdmin!=='undefined'&&!isAdmin)return toast('सिर्फ़ Admin Undo कर सकता है');
+  toast('⏳ वापस ला रहे हैं...');
+  try{
+    for(const it of g.items.slice().reverse()){for(let i=0;i<it.rows.length;i+=200){const r=await sb.from(it.table).upsert(it.rows.slice(i,i+200));if(r.error)throw r.error}}
+    stack.pop();save();const el=document.getElementById('sfgUndoSnack');el&&el.remove();
+    toast('✅ Undo हो गया — रिकॉर्ड वापस आ गए');try{await refresh()}catch(e){}
+  }catch(e){console.error(e);toast('Undo नहीं हुआ: '+(e.message||e))}
+};
+const FILT=['eq','neq','in','match','is','gt','gte','lt','lte','like','ilike','or','not','filter'];
+function wrap(){
+  if(typeof sb==='undefined'||!sb||sb.__undoWrapped||typeof sb.from!=='function')return;
+  const origFrom=sb.from.bind(sb);sb.__undoWrapped=true;
+  sb.from=function(table){
+    const q=origFrom(table);if(typeof q.delete!=='function')return q;const od=q.delete.bind(q);
+    q.delete=function(){
+      const b=od.apply(null,arguments),rec=[];
+      FILT.forEach(m=>{if(typeof b[m]==='function'){const om=b[m].bind(b);b[m]=function(){rec.push([m,[].slice.call(arguments)]);return om.apply(null,arguments)}}});
+      const ot=b.then.bind(b);
+      b.then=function(res,rej){return (async()=>{
+        let rows=[];if(NAME[table]){try{let sq=origFrom(table).select('*');rec.forEach(x=>{sq=sq[x[0]].apply(sq,x[1])});const r=await sq;if(!r.error&&Array.isArray(r.data))rows=r.data}catch(e){}}
+        const out=await new Promise((rs,rj)=>ot(rs,rj));
+        if(out&&!out.error&&rows.length)push(table,rows);
+        return out})().then(res,rej)};
+      return b};
+    return q};
+}
+setInterval(wrap,1500);wrap();
+})();
+</script>
+
 </body>
 
 
